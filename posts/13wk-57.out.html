@@ -199,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="e43b6748-3f6b-4d31-90ba-bd80c3e88cd3" class="cell" data-tags="[]" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install autogluon.eda</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="6434b134-a85e-4b1f-9416-1f86bc4c3b49" class="cell" data-tags="[]" data-execution_count="2">
+<div id="6434b134-a85e-4b1f-9416-1f86bc4c3b49" class="cell" data-tags="[]" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
@@ -215,18 +215,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data" class="level1">
 <h1>3. Data</h1>
 <p>ref: <a href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview" class="uri">https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/overview</a></p>
-<div id="f60f3d30-0f73-4fa2-b55a-96dd2961a3c5" class="cell" data-tags="[]" data-execution_count="9">
+<div id="f60f3d30-0f73-4fa2-b55a-96dd2961a3c5" class="cell" data-tags="[]" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions download <span class="op">-</span>c house<span class="op">-</span>prices<span class="op">-</span>advanced<span class="op">-</span>regression<span class="op">-</span>techniques</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
-2023-12-03 17:55:21,603 WARNING Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPSConnection object at 0x7ffac6ef7e50&gt;: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /api/v1/competitions/data/download-all/house-prices-advanced-regression-techniques
-2023-12-03 17:55:41,625 WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPSConnection object at 0x7ffac6f67b50&gt;: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /api/v1/competitions/data/download-all/house-prices-advanced-regression-techniques
-Downloading house-prices-advanced-regression-techniques.zip to /home/coco/Dropbox/coco/posts/1. Class/Special Topics in Big Data Analysis2023
-100%|█████████████████████████████████████████| 199k/199k [00:00&lt;00:00, 873kB/s]
-100%|█████████████████████████████████████████| 199k/199k [00:00&lt;00:00, 872kB/s]</code></pre>
+Downloading house-prices-advanced-regression-techniques.zip to /home/coco/Dropbox/Class/STBDA23/posts
+100%|█████████████████████████████████████████| 199k/199k [00:00&lt;00:00, 436kB/s]
+100%|█████████████████████████████████████████| 199k/199k [00:00&lt;00:00, 435kB/s]</code></pre>
 </div>
 </div>
-<div id="1eeb438a-63ee-46c5-875a-2410ccf5fc75" class="cell" data-tags="[]" data-execution_count="10">
+<div id="1eeb438a-63ee-46c5-875a-2410ccf5fc75" class="cell" data-tags="[]" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>unzip house<span class="op">-</span>prices<span class="op">-</span>advanced<span class="op">-</span>regression<span class="op">-</span>techniques.<span class="bu">zip</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Archive:  house-prices-advanced-regression-techniques.zip
@@ -236,12 +234,12 @@ Downloading house-prices-advanced-regression-techniques.zip to /home/coco/Dropbo
   inflating: train.csv               </code></pre>
 </div>
 </div>
-<div id="9891678c-b22f-48ad-9d2c-29af52095e26" class="cell" data-tags="[]" data-execution_count="11">
+<div id="9891678c-b22f-48ad-9d2c-29af52095e26" class="cell" data-tags="[]" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_submission <span class="op">=</span> pd.read_csv(<span class="st">"sample_submission.csv"</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.read_csv(<span class="st">"train.csv"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_test <span class="op">=</span> pd.read_csv(<span class="st">"test.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="bb2a217d-f39a-41a0-ba5d-a14f2e7a9ee6" class="cell" data-tags="[]" data-execution_count="12">
+<div id="bb2a217d-f39a-41a0-ba5d-a14f2e7a9ee6" class="cell" data-tags="[]" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm sample_submission.csv</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm train.csv</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm test.csv</span>
@@ -251,13 +249,13 @@ Downloading house-prices-advanced-regression-techniques.zip to /home/coco/Dropbo
 </section>
 <section id="적합" class="level1">
 <h1>4. 적합</h1>
-<div id="c1c50fc1-65bc-4db7-9777-6e451da5fd6e" class="cell" data-tags="[]" data-execution_count="13">
+<div id="c1c50fc1-65bc-4db7-9777-6e451da5fd6e" class="cell" data-tags="[]" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span>(df_train.columns) <span class="op">-</span> <span class="bu">set</span>(df_test.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>{'SalePrice'}</code></pre>
 </div>
 </div>
-<div id="8a5b7e05-a3c2-494a-a86d-d73e5349f415" class="cell" data-tags="[]" data-execution_count="14">
+<div id="8a5b7e05-a3c2-494a-a86d-d73e5349f415" class="cell" data-tags="[]" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step1 -- pass</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># step2</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(label<span class="op">=</span><span class="st">'SalePrice'</span>)</span>
@@ -267,15 +265,15 @@ Downloading house-prices-advanced-regression-techniques.zip to /home/coco/Dropbo
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> predictr.predict(df_train)</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>yyhat <span class="op">=</span> predictr.predict(df_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231203_085611/"
+<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231210_084023/"
 Beginning AutoGluon training ...
-AutoGluon will save models to "AutogluonModels/ag-20231203_085611/"
+AutoGluon will save models to "AutogluonModels/ag-20231210_084023/"
 AutoGluon Version:  0.8.2
 Python Version:     3.8.18
 Operating System:   Linux
 Platform Machine:   x86_64
-Platform Version:   #26~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Jul 13 16:27:29 UTC 2
-Disk Space Avail:   673.14 GB / 982.82 GB (68.5%)
+Platform Version:   #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2
+Disk Space Avail:   643.98 GB / 982.82 GB (65.5%)
 Train Data Rows:    1460
 Train Data Columns: 80
 Label Column: SalePrice
@@ -285,7 +283,7 @@ AutoGluon infers your prediction problem is: 'regression' (because dtype of labe
     If 'regression' is not the correct problem_type, please manually specify the problem_type parameter during predictor init (You may specify problem_type as one of: ['binary', 'multiclass', 'regression'])
 Using Feature Generators to preprocess the data ...
 Fitting AutoMLPipelineFeatureGenerator...
-    Available Memory:                    100884.71 MB
+    Available Memory:                    128242.01 MB
     Train Data (Original)  Memory Usage: 4.06 MB (0.0% of available memory)
     Inferring data type of each feature based on column values. Set feature_metadata_in to manually specify special dtypes of the features.
     Stage 1 Generators:
@@ -313,7 +311,7 @@ Fitting AutoMLPipelineFeatureGenerator...
     0.2s = Fit runtime
     80 features in original data used to generate 80 features in processed data.
     Train Data (Processed) Memory Usage: 0.52 MB (0.0% of available memory)
-Data preprocessing and feature engineering runtime = 0.2s ...
+Data preprocessing and feature engineering runtime = 0.18s ...
 AutoGluon will gauge predictive performance using evaluation metric: 'root_mean_squared_error'
     This metric's sign has been flipped to adhere to being higher_is_better. The metric score can be multiplied by -1 to get the metric value.
     To change this, specify the eval_metric parameter of Predictor()
@@ -331,7 +329,7 @@ User-specified model hyperparameters to be fit:
 }
 Fitting 11 L1 models ...
 Fitting model: KNeighborsUnif ...
-Exception ignored on calling ctypes callback function: &lt;function _ThreadpoolInfo._find_modules_with_dl_iterate_phdr.&lt;locals&gt;.match_module_callback at 0x7f8ee374cee0&gt;
+Exception ignored on calling ctypes callback function: &lt;function _ThreadpoolInfo._find_modules_with_dl_iterate_phdr.&lt;locals&gt;.match_module_callback at 0x7f2e74356550&gt;
 Traceback (most recent call last):
   File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 400, in match_module_callback
     self._make_module_from_path(filepath)
@@ -343,10 +341,10 @@ Traceback (most recent call last):
     config = get_config().split()
 AttributeError: 'NoneType' object has no attribute 'split'
     -52278.8213  = Validation score   (-root_mean_squared_error)
-    0.01s    = Training   runtime
+    0.2s     = Training   runtime
     0.04s    = Validation runtime
 Fitting model: KNeighborsDist ...
-Exception ignored on calling ctypes callback function: &lt;function _ThreadpoolInfo._find_modules_with_dl_iterate_phdr.&lt;locals&gt;.match_module_callback at 0x7f8ee358fc10&gt;
+Exception ignored on calling ctypes callback function: &lt;function _ThreadpoolInfo._find_modules_with_dl_iterate_phdr.&lt;locals&gt;.match_module_callback at 0x7f2e4f9dd670&gt;
 Traceback (most recent call last):
   File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 400, in match_module_callback
     self._make_module_from_path(filepath)
@@ -358,27 +356,27 @@ Traceback (most recent call last):
     config = get_config().split()
 AttributeError: 'NoneType' object has no attribute 'split'
     -51314.2734  = Validation score   (-root_mean_squared_error)
-    0.01s    = Training   runtime
-    0.0s     = Validation runtime
+    0.03s    = Training   runtime
+    0.01s    = Validation runtime
 Fitting model: LightGBMXT ...
     -27196.7065  = Validation score   (-root_mean_squared_error)
-    2.01s    = Training   runtime
+    2.18s    = Training   runtime
     0.02s    = Validation runtime
 Fitting model: LightGBM ...
     -28692.2871  = Validation score   (-root_mean_squared_error)
-    4.74s    = Training   runtime
+    5.13s    = Training   runtime
     0.05s    = Validation runtime
 Fitting model: RandomForestMSE ...
     -32785.3519  = Validation score   (-root_mean_squared_error)
-    0.32s    = Training   runtime
+    0.37s    = Training   runtime
     0.02s    = Validation runtime
 Fitting model: CatBoost ...
     -28465.6966  = Validation score   (-root_mean_squared_error)
-    40.81s   = Training   runtime
+    43.66s   = Training   runtime
     0.01s    = Validation runtime
 Fitting model: ExtraTreesMSE ...
     -32045.9062  = Validation score   (-root_mean_squared_error)
-    0.25s    = Training   runtime
+    0.3s     = Training   runtime
     0.02s    = Validation runtime
 Fitting model: NeuralNetFastAI ...
     -33846.1211  = Validation score   (-root_mean_squared_error)
@@ -386,22 +384,22 @@ Fitting model: NeuralNetFastAI ...
     0.02s    = Validation runtime
 Fitting model: XGBoost ...
     -27778.2437  = Validation score   (-root_mean_squared_error)
-    0.58s    = Training   runtime
+    0.87s    = Training   runtime
     0.01s    = Validation runtime
 Fitting model: NeuralNetTorch ...
     -36076.0341  = Validation score   (-root_mean_squared_error)
-    2.19s    = Training   runtime
+    2.24s    = Training   runtime
     0.02s    = Validation runtime
 Fitting model: LightGBMLarge ...
     -32084.1712  = Validation score   (-root_mean_squared_error)
-    7.34s    = Training   runtime
-    0.03s    = Validation runtime
+    7.97s    = Training   runtime
+    0.04s    = Validation runtime
 Fitting model: WeightedEnsemble_L2 ...
     -26322.571   = Validation score   (-root_mean_squared_error)
     0.16s    = Training   runtime
     0.0s     = Validation runtime
-AutoGluon training complete, total runtime = 60.9s ... Best model: "WeightedEnsemble_L2"
-TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels/ag-20231203_085611/")
+AutoGluon training complete, total runtime = 65.86s ... Best model: "WeightedEnsemble_L2"
+TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels/ag-20231210_084023/")
 WARNING: Int features without null values at train time contain null values at inference time! Imputing nulls to 0. To avoid this, pass the features as floats during fit!
 WARNING: Int features with nulls: ['BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'TotalBsmtSF', 'BsmtFullBath', 'BsmtHalfBath', 'GarageCars', 'GarageArea']</code></pre>
 </div>
@@ -431,27 +429,23 @@ WARNING: Int features with nulls: ['BsmtFinSF1', 'BsmtFinSF2', 'BsmtUnfSF', 'Tot
 </section>
 <section id="제출" class="level1">
 <h1>5. 제출</h1>
-<div id="74aa4fd9-2f38-4865-b813-5c401cc16e6b" class="cell" data-tags="[]" data-execution_count="15">
+<div id="74aa4fd9-2f38-4865-b813-5c401cc16e6b" class="cell" data-tags="[]" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_submission[<span class="st">'SalePrice'</span>] <span class="op">=</span> yyhat </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df_submission.to_csv(<span class="st">"submission.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3ad4fcf6-b49c-4dda-a90a-15172c6efc95" class="cell" data-tags="[]" data-execution_count="16">
+<div id="3ad4fcf6-b49c-4dda-a90a-15172c6efc95" class="cell" data-tags="[]" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions submit <span class="op">-</span>c house<span class="op">-</span>prices<span class="op">-</span>advanced<span class="op">-</span>regression<span class="op">-</span>techniques <span class="op">-</span>f submission.csv <span class="op">-</span>m <span class="st">"오토글루온을 이용하여 첫제출"</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm submission.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
-2023-12-03 17:57:33,818 WARNING Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPSConnection object at 0x7fa3d47a6670&gt;: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /api/v1/competitions/house-prices-advanced-regression-techniques/submissions/url/21630/1701593833
-2023-12-03 17:57:53,838 WARNING Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPSConnection object at 0x7fa3d47cfd90&gt;: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /api/v1/competitions/house-prices-advanced-regression-techniques/submissions/url/21630/1701593833
-  0%|                                               | 0.00/21.1k [00:00&lt;?, ?B/s]2023-12-03 17:58:14,283 WARNING Retrying (Retry(total=9, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPSConnection object at 0x7fa3d470ce20&gt;: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /upload/storage/v1/b/kaggle-competitions-submissions/o?uploadType=resumable&amp;upload_id=ABPtcPp51atQGnXoYzkdupK0sxdqlBsLxt7QhaugSs_z5VqtFlcwjbZiEyTciSUmdvWxIRwg8NCPkL11PFRpwi8zgauiqGO8t0MT0Idb1H3sLRIO
-2023-12-03 17:58:35,303 WARNING Retrying (Retry(total=8, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('&lt;urllib3.connection.HTTPSConnection object at 0x7fa3d4728190&gt;: Failed to establish a new connection: [Errno -3] Temporary failure in name resolution')': /upload/storage/v1/b/kaggle-competitions-submissions/o?uploadType=resumable&amp;upload_id=ABPtcPp51atQGnXoYzkdupK0sxdqlBsLxt7QhaugSs_z5VqtFlcwjbZiEyTciSUmdvWxIRwg8NCPkL11PFRpwi8zgauiqGO8t0MT0Idb1H3sLRIO
-100%|████████████████████████████████████████| 21.1k/21.1k [00:57&lt;00:00, 374B/s]
+100%|██████████████████████████████████████| 21.1k/21.1k [00:01&lt;00:00, 11.4kB/s]
 Successfully submitted to House Prices - Advanced Regression Techniques</code></pre>
 </div>
 </div>
 <p><img src="13wk-57.out_files/figure-html/772c3a96-af5c-4c7f-8095-287bad6fa20c-1-13wk-57_files/figure-ipynb/b501b297-c2f8-4952-bc9e-7d57dedab895-1-ce6e6cbd-cbf1-41d4-95a6-12fb81274125.png" class="img-fluid"></p>
-<div id="6848b86b-afcd-4af5-86a2-21584754ed31" class="cell" data-tags="[]" data-execution_count="17">
+<div id="6848b86b-afcd-4af5-86a2-21584754ed31" class="cell" data-tags="[]" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">958</span><span class="op">/</span><span class="dv">4955</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>0.19334006054490413</code></pre>
 </div>
 </div>
@@ -460,9 +454,9 @@ Successfully submitted to House Prices - Advanced Regression Techniques</code></
 <section id="해석-및-시각화-hw" class="level1">
 <h1>6. 해석 및 시각화 (HW)</h1>
 <p><code>-</code> 변수들중에서 <code>SalePrice</code>를 예측하기에 적절한 변수들을 조사해볼것.</p>
-<div id="1df630fa-3c51-421c-bd0b-afed466901d8" class="cell" data-execution_count="18">
+<div id="1df630fa-3c51-421c-bd0b-afed466901d8" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
+<div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
 
@@ -765,14 +759,14 @@ Successfully submitted to House Prices - Advanced Regression Techniques</code></
 </div>
 </div>
 </div>
-<div id="7d6ad119-e995-404e-9421-67b1a9eafa80" class="cell" data-execution_count="19">
+<div id="7d6ad119-e995-404e-9421-67b1a9eafa80" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>auto.quick_fit(</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    train_data<span class="op">=</span>df_train,</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">'SalePrice'</span>,</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    show_feature_importance_barplots<span class="op">=</span><span class="va">True</span></span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231203_090647/"</code></pre>
+<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231210_084134/"</code></pre>
 </div>
 <section id="model-prediction-for-saleprice" class="level3 cell-output cell-output-display">
 <h3 class="anchored" data-anchor-id="model-prediction-for-saleprice">Model Prediction for SalePrice</h3>
@@ -814,12 +808,12 @@ Successfully submitted to House Prices - Advanced Regression Techniques</code></
 <td>LightGBMXT</td>
 <td>-30529.412291</td>
 <td>-32535.182194</td>
-<td>0.007812</td>
-<td>0.006692</td>
-<td>0.236226</td>
-<td>0.007812</td>
-<td>0.006692</td>
-<td>0.236226</td>
+<td>0.008621</td>
+<td>0.006892</td>
+<td>0.269097</td>
+<td>0.008621</td>
+<td>0.006892</td>
+<td>0.269097</td>
 <td>1</td>
 <td>True</td>
 <td>1</td>
@@ -1862,9 +1856,9 @@ Successfully submitted to House Prices - Advanced Regression Techniques</code></
 </div>
 </div>
 </div>
-<div id="85bfcd5e-dabc-4d80-9cf2-b97325aebeb1" class="cell" data-execution_count="20">
+<div id="85bfcd5e-dabc-4d80-9cf2-b97325aebeb1" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df_train.iloc[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 
 
@@ -1927,9 +1921,9 @@ Successfully submitted to House Prices - Advanced Regression Techniques</code></
 </div>
 </div>
 </div>
-<div id="4e030a74-dadf-4f77-bce5-8272b60a4503" class="cell" data-execution_count="21">
+<div id="4e030a74-dadf-4f77-bce5-8272b60a4503" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>predictr.predict(df_train.iloc[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="21">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>1    170013.546875
 Name: SalePrice, dtype: float32</code></pre>
 </div>
@@ -1943,6 +1937,9 @@ Name: SalePrice, dtype: float32</code></pre>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     plot='waterfall'</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li>위 코드 돌아가는데 너무 오래걸리네</li>
+</ul>
 <blockquote class="blockquote">
 <p>chatGPT의 변수에 대한 설명</p>
 <p>이 데이터는 Kaggle의 “House Prices - Advanced Regression Techniques” 대회에서 사용되는 데이터로, 주택 판매 가격을 예측하는 문제입니다. 아래는 데이터에 있는 변수들에 대한 설명입니다.</p>
@@ -1971,6 +1968,446 @@ Name: SalePrice, dtype: float32</code></pre>
 <p>… 그 외에도 다양한 주택 특징 및 설명이 포함되어 있습니다.</p>
 <p>이 변수들은 각각 주택에 대한 다양한 특징을 설명하고 있으며, 이러한 특징을 사용하여 각 주택의 판매 가격을 예측하는 것이 목표입니다.</p>
 </blockquote>
+<ul>
+<li>위 데이터에서 <code>SalePrice</code>을 예측하는데 중요한 변수로는 <code>OverallQual</code>이 가장 중요하다.</li>
+</ul>
+<div id="7f7e04ad-90f5-405d-b519-e88a18104883" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span>(df_train[<span class="st">'OverallQual'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}</code></pre>
+</div>
+</div>
+<p>등급이 높을 수록 saleprice가 더 높다.</p>
+<p><code>-</code> 변수 overallqual만 해보자</p>
+<div id="af032ac2-384f-4baf-a2fc-d99a1b91331d" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df_tr_ <span class="op">=</span> df_train[[<span class="st">'OverallQual'</span>,<span class="st">'SalePrice'</span>]]</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df_ts_ <span class="op">=</span> df_test[[<span class="st">'OverallQual'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="325abbb4-3442-42c0-92f4-dff2cb634b78" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df_tr_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">OverallQual</th>
+<th data-quarto-table-cell-role="th">SalePrice</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>7</td>
+<td>208500</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>6</td>
+<td>181500</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>7</td>
+<td>223500</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>7</td>
+<td>140000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>8</td>
+<td>250000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1455</td>
+<td>6</td>
+<td>175000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1456</td>
+<td>6</td>
+<td>210000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1457</td>
+<td>7</td>
+<td>266500</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1458</td>
+<td>5</td>
+<td>142125</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1459</td>
+<td>5</td>
+<td>147500</td>
+</tr>
+</tbody>
+</table>
+
+<p>1460 rows × 2 columns</p>
+</div>
+</div>
+</div>
+<div id="3a7ea12e-4970-4249-a1e3-755c62430a7b" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step1 -- pass</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># step2</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(label<span class="op">=</span><span class="st">'SalePrice'</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step3</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>predictr.fit(df_tr_)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># step4</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> predictr.predict(df_tr_)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">#yyhat = predictr.predict(df_ts_)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231210_090017/"
+Beginning AutoGluon training ...
+AutoGluon will save models to "AutogluonModels/ag-20231210_090017/"
+AutoGluon Version:  0.8.2
+Python Version:     3.8.18
+Operating System:   Linux
+Platform Machine:   x86_64
+Platform Version:   #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2
+Disk Space Avail:   643.82 GB / 982.82 GB (65.5%)
+Train Data Rows:    1460
+Train Data Columns: 1
+Label Column: SalePrice
+Preprocessing data ...
+AutoGluon infers your prediction problem is: 'regression' (because dtype of label-column == int and many unique label-values observed).
+    Label info (max, min, mean, stddev): (755000, 34900, 180921.19589, 79442.50288)
+    If 'regression' is not the correct problem_type, please manually specify the problem_type parameter during predictor init (You may specify problem_type as one of: ['binary', 'multiclass', 'regression'])
+Using Feature Generators to preprocess the data ...
+Fitting AutoMLPipelineFeatureGenerator...
+    Available Memory:                    128082.22 MB
+    Train Data (Original)  Memory Usage: 0.01 MB (0.0% of available memory)
+    Inferring data type of each feature based on column values. Set feature_metadata_in to manually specify special dtypes of the features.
+    Stage 1 Generators:
+        Fitting AsTypeFeatureGenerator...
+    Stage 2 Generators:
+        Fitting FillNaFeatureGenerator...
+    Stage 3 Generators:
+        Fitting IdentityFeatureGenerator...
+    Stage 4 Generators:
+        Fitting DropUniqueFeatureGenerator...
+    Stage 5 Generators:
+        Fitting DropDuplicatesFeatureGenerator...
+    Types of features in original data (raw dtype, special dtypes):
+        ('int', []) : 1 | ['OverallQual']
+    Types of features in processed data (raw dtype, special dtypes):
+        ('int', []) : 1 | ['OverallQual']
+    0.0s = Fit runtime
+    1 features in original data used to generate 1 features in processed data.
+    Train Data (Processed) Memory Usage: 0.01 MB (0.0% of available memory)
+Data preprocessing and feature engineering runtime = 0.03s ...
+AutoGluon will gauge predictive performance using evaluation metric: 'root_mean_squared_error'
+    This metric's sign has been flipped to adhere to being higher_is_better. The metric score can be multiplied by -1 to get the metric value.
+    To change this, specify the eval_metric parameter of Predictor()
+Automatically generating train/validation split with holdout_frac=0.2, Train Rows: 1168, Val Rows: 292
+User-specified model hyperparameters to be fit:
+{
+    'NN_TORCH': {},
+    'GBM': [{'extra_trees': True, 'ag_args': {'name_suffix': 'XT'}}, {}, 'GBMLarge'],
+    'CAT': {},
+    'XGB': {},
+    'FASTAI': {},
+    'RF': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'XT': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'KNN': [{'weights': 'uniform', 'ag_args': {'name_suffix': 'Unif'}}, {'weights': 'distance', 'ag_args': {'name_suffix': 'Dist'}}],
+}
+Fitting 11 L1 models ...
+Fitting model: KNeighborsUnif ...
+    -51302.9262  = Validation score   (-root_mean_squared_error)
+    0.04s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: KNeighborsDist ...
+    -51302.9262  = Validation score   (-root_mean_squared_error)
+    0.03s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: LightGBMXT ...
+    -61288.6739  = Validation score   (-root_mean_squared_error)
+    0.28s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: LightGBM ...
+    -48771.8547  = Validation score   (-root_mean_squared_error)
+    0.21s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: RandomForestMSE ...
+    -47823.2599  = Validation score   (-root_mean_squared_error)
+    0.25s    = Training   runtime
+    0.02s    = Validation runtime
+Fitting model: CatBoost ...
+    -47813.9877  = Validation score   (-root_mean_squared_error)
+    0.13s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: ExtraTreesMSE ...
+    -47823.2599  = Validation score   (-root_mean_squared_error)
+    0.24s    = Training   runtime
+    0.02s    = Validation runtime
+Fitting model: NeuralNetFastAI ...
+    -47262.4708  = Validation score   (-root_mean_squared_error)
+    0.67s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: XGBoost ...
+    -47576.4125  = Validation score   (-root_mean_squared_error)
+    0.09s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: NeuralNetTorch ...
+    -47489.2325  = Validation score   (-root_mean_squared_error)
+    1.25s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: LightGBMLarge ...
+    -47629.3214  = Validation score   (-root_mean_squared_error)
+    0.22s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: WeightedEnsemble_L2 ...
+    -47251.0188  = Validation score   (-root_mean_squared_error)
+    0.16s    = Training   runtime
+    0.0s     = Validation runtime
+AutoGluon training complete, total runtime = 3.77s ... Best model: "WeightedEnsemble_L2"
+TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels/ag-20231210_090017/")</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1000]  valid_set's rmse: 61288.7
+[2000]  valid_set's rmse: 61288.7</code></pre>
+</div>
+</div>
+<div id="004f1498-757b-48e3-a4da-9aad7a426333" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>yyhat <span class="op">=</span> predictr.predict(df_ts_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="536b483f-5716-43c8-9017-4155b52e28f0" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>auto.quick_fit(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    train_data<span class="op">=</span>df_tr_,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    label<span class="op">=</span><span class="st">'SalePrice'</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    show_feature_importance_barplots<span class="op">=</span><span class="va">True</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231210_090127/"</code></pre>
+</div>
+<section id="model-prediction-for-saleprice-1" class="level3 cell-output cell-output-display">
+<h3 class="anchored" data-anchor-id="model-prediction-for-saleprice-1">Model Prediction for SalePrice</h3>
+</section>
+<div class="cell-output cell-output-display">
+<p>Using validation data for <code>Test</code> points</p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="13wk-57.out_files/figure-html/cell-23-output-4.png" class="img-fluid"></p>
+</div>
+<section id="model-leaderboard-1" class="level3 cell-output cell-output-display">
+<h3 class="anchored" data-anchor-id="model-leaderboard-1">Model Leaderboard</h3>
+</section>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_test</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_test</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_test_marginal</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>LightGBMXT</td>
+<td>-52272.947289</td>
+<td>-50360.652261</td>
+<td>0.000823</td>
+<td>0.000755</td>
+<td>0.215841</td>
+<td>0.000823</td>
+<td>0.000755</td>
+<td>0.215841</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<section id="feature-importance-for-trained-model-1" class="level3 cell-output cell-output-display">
+<h3 class="anchored" data-anchor-id="feature-importance-for-trained-model-1">Feature Importance for Trained Model</h3>
+</section>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">importance</th>
+<th data-quarto-table-cell-role="th">stddev</th>
+<th data-quarto-table-cell-role="th">p_value</th>
+<th data-quarto-table-cell-role="th">n</th>
+<th data-quarto-table-cell-role="th">p99_high</th>
+<th data-quarto-table-cell-role="th">p99_low</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">OverallQual</td>
+<td>52258.930244</td>
+<td>2494.060513</td>
+<td>6.206537e-07</td>
+<td>5</td>
+<td>57394.235311</td>
+<td>47123.625176</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="13wk-57.out_files/figure-html/cell-23-output-9.png" class="img-fluid"></p>
+</div>
+<section id="rows-with-the-highest-prediction-error-1" class="level3 cell-output cell-output-display">
+<h3 class="anchored" data-anchor-id="rows-with-the-highest-prediction-error-1">Rows with the highest prediction error</h3>
+</section>
+<div class="cell-output cell-output-display">
+<p>Rows in this category worth inspecting for the causes of the error</p>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">OverallQual</th>
+<th data-quarto-table-cell-role="th">SalePrice</th>
+<th data-quarto-table-cell-role="th">SalePrice_pred</th>
+<th data-quarto-table-cell-role="th">error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1182</td>
+<td>10</td>
+<td>745000</td>
+<td>302755.9375</td>
+<td>442244.0625</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">898</td>
+<td>9</td>
+<td>611657</td>
+<td>302755.9375</td>
+<td>308901.0625</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">440</td>
+<td>10</td>
+<td>555000</td>
+<td>302755.9375</td>
+<td>252244.0625</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">769</td>
+<td>8</td>
+<td>538000</td>
+<td>302755.9375</td>
+<td>235244.0625</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1243</td>
+<td>10</td>
+<td>465000</td>
+<td>302755.9375</td>
+<td>162244.0625</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1298</td>
+<td>10</td>
+<td>160000</td>
+<td>302755.9375</td>
+<td>142755.9375</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">458</td>
+<td>8</td>
+<td>161000</td>
+<td>302755.9375</td>
+<td>141755.9375</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1211</td>
+<td>8</td>
+<td>164000</td>
+<td>302755.9375</td>
+<td>138755.9375</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">58</td>
+<td>10</td>
+<td>438780</td>
+<td>302755.9375</td>
+<td>136024.0625</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">991</td>
+<td>8</td>
+<td>168000</td>
+<td>302755.9375</td>
+<td>134755.9375</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="5d44321c-f4bf-4d81-8984-73eb9ae0a16b" class="cell" data-tags="[]" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>df_submission[<span class="st">'SalePrice'</span>] <span class="op">=</span> yyhat </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>df_submission.to_csv(<span class="st">"submission.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="abd1cdb1-2b9e-4a32-82c7-c572d4d02779" class="cell" data-tags="[]" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions submit <span class="op">-</span>c house<span class="op">-</span>prices<span class="op">-</span>advanced<span class="op">-</span>regression<span class="op">-</span>techniques <span class="op">-</span>f submission.csv <span class="op">-</span>m <span class="st">"overallqual"</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm submission.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|██████████████████████████████████████| 21.4k/21.4k [00:01&lt;00:00, 11.6kB/s]
+Successfully submitted to House Prices - Advanced Regression Techniques</code></pre>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="13wk-57.out_files/figure-html/cdd892e6-3ceb-4812-8c50-b4bcf1667e2e-1-5cb0f5d1-2375-44a0-959f-6dbc89aede23.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">image.png</figcaption>
+</figure>
+</div>
+<div id="3e75661f-8211-429d-8b37-45365be1da24" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1110</span><span class="op">/</span><span class="dv">5012</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>0.2214684756584198</code></pre>
+</div>
+</div>
+<p>높아졌다잉</p>
 
 
 </section>

@@ -1,0 +1,3743 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.283">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="김보람">
+<meta name="dcterms.date" content="2023-12-10">
+
+<title>STBDA23 - [STBDA2023] 14wk-59: 자전거대여 / 시계열자료분석?(Autogluon)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">STBDA23</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">[STBDA2023] 14wk-59: 자전거대여 / 시계열자료분석?(Autogluon)</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>김보람 </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 10, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="wk-59-자전거대여-시계열자료분석autogluon" class="level1">
+<h1>14wk-59: 자전거대여 / 시계열자료분석?(Autogluon)</h1>
+<p>최규빈<br>
+2023-12-01</p>
+</section>
+<section id="강의영상" class="level1">
+<h1>1. 강의영상</h1>
+<p><a href="???">???</a></p>
+</section>
+<section id="imports" class="level1">
+<h1>2. Imports</h1>
+<div id="e0b456a5-a5df-4ace-b3d1-1ff4acfd0ebb" class="cell" data-tags="[]" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.preprocessing</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#---#}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> autogluon.tabular <span class="im">import</span> TabularPredictor</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> autogluon.timeseries <span class="im">import</span> TimeSeriesDataFrame, TimeSeriesPredictor</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> autogluon.common <span class="im">import</span> space</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#---#</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data" class="level1">
+<h1>3. Data</h1>
+<p>ref: <a href="https://www.kaggle.com/competitions/bike-sharing-demand" class="uri">https://www.kaggle.com/competitions/bike-sharing-demand</a></p>
+<p><code>-</code> 자료 다운로드</p>
+<div id="5aea7367-fbdd-4b95-9145-11708c73ed35" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions download <span class="op">-</span>c bike<span class="op">-</span>sharing<span class="op">-</span>demand</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+Downloading bike-sharing-demand.zip to /home/coco/Dropbox/Class/STBDA23/posts
+100%|█████████████████████████████████████████| 189k/189k [00:00&lt;00:00, 459kB/s]
+100%|█████████████████████████████████████████| 189k/189k [00:00&lt;00:00, 459kB/s]</code></pre>
+</div>
+</div>
+<div id="20b43e52-fa08-4bce-97c2-fd46001b6d95" class="cell" data-tags="[]" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>unzip bike<span class="op">-</span>sharing<span class="op">-</span>demand.<span class="bu">zip</span> <span class="op">-</span>d data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Archive:  bike-sharing-demand.zip
+  inflating: data/sampleSubmission.csv  
+  inflating: data/test.csv           
+  inflating: data/train.csv          </code></pre>
+</div>
+</div>
+<div id="f586b5f0-5812-4e58-85d4-7d1a5427c889" class="cell" data-tags="[]" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sampleSubmission <span class="op">=</span> pd.read_csv(<span class="st">'data/sampleSubmission.csv'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.read_csv(<span class="st">'data/train.csv'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df_test <span class="op">=</span> pd.read_csv(<span class="st">'data/test.csv'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="75d43ed1-3adb-4922-810c-94a1eb7292d8" class="cell" data-tags="[]" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm <span class="op">-</span>rf data</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm bike<span class="op">-</span>sharing<span class="op">-</span>demand.<span class="bu">zip</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>-</code> 자료관찰</p>
+<div id="ed041dfd-ae71-4ab9-864a-1bcb213f2f93" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span>(df_train[<span class="st">'weather'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>{1, 2, 3, 4}</code></pre>
+</div>
+</div>
+<div id="fea0b282-f4de-42b5-b632-e6964fc33279" class="cell" data-tags="[]" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>display(<span class="st">"train"</span>,df_train,<span class="st">"test"</span>,df_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'train'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">datetime</th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">holiday</th>
+<th data-quarto-table-cell-role="th">workingday</th>
+<th data-quarto-table-cell-role="th">weather</th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">atemp</th>
+<th data-quarto-table-cell-role="th">humidity</th>
+<th data-quarto-table-cell-role="th">windspeed</th>
+<th data-quarto-table-cell-role="th">casual</th>
+<th data-quarto-table-cell-role="th">registered</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2011-01-01 00:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>14.395</td>
+<td>81</td>
+<td>0.0000</td>
+<td>3</td>
+<td>13</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2011-01-01 01:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.02</td>
+<td>13.635</td>
+<td>80</td>
+<td>0.0000</td>
+<td>8</td>
+<td>32</td>
+<td>40</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2011-01-01 02:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.02</td>
+<td>13.635</td>
+<td>80</td>
+<td>0.0000</td>
+<td>5</td>
+<td>27</td>
+<td>32</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2011-01-01 03:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>14.395</td>
+<td>75</td>
+<td>0.0000</td>
+<td>3</td>
+<td>10</td>
+<td>13</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2011-01-01 04:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>14.395</td>
+<td>75</td>
+<td>0.0000</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10881</td>
+<td>2012-12-19 19:00:00</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>15.58</td>
+<td>19.695</td>
+<td>50</td>
+<td>26.0027</td>
+<td>7</td>
+<td>329</td>
+<td>336</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10882</td>
+<td>2012-12-19 20:00:00</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>14.76</td>
+<td>17.425</td>
+<td>57</td>
+<td>15.0013</td>
+<td>10</td>
+<td>231</td>
+<td>241</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10883</td>
+<td>2012-12-19 21:00:00</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.94</td>
+<td>15.910</td>
+<td>61</td>
+<td>15.0013</td>
+<td>4</td>
+<td>164</td>
+<td>168</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10884</td>
+<td>2012-12-19 22:00:00</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.94</td>
+<td>17.425</td>
+<td>61</td>
+<td>6.0032</td>
+<td>12</td>
+<td>117</td>
+<td>129</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10885</td>
+<td>2012-12-19 23:00:00</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.12</td>
+<td>16.665</td>
+<td>66</td>
+<td>8.9981</td>
+<td>4</td>
+<td>84</td>
+<td>88</td>
+</tr>
+</tbody>
+</table>
+
+<p>10886 rows × 12 columns</p>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>'test'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">datetime</th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">holiday</th>
+<th data-quarto-table-cell-role="th">workingday</th>
+<th data-quarto-table-cell-role="th">weather</th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">atemp</th>
+<th data-quarto-table-cell-role="th">humidity</th>
+<th data-quarto-table-cell-role="th">windspeed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2011-01-20 00:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>11.365</td>
+<td>56</td>
+<td>26.0027</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2011-01-20 01:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>13.635</td>
+<td>56</td>
+<td>0.0000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2011-01-20 02:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>13.635</td>
+<td>56</td>
+<td>0.0000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2011-01-20 03:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>12.880</td>
+<td>56</td>
+<td>11.0014</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2011-01-20 04:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>12.880</td>
+<td>56</td>
+<td>11.0014</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6488</td>
+<td>2012-12-31 19:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>10.66</td>
+<td>12.880</td>
+<td>60</td>
+<td>11.0014</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6489</td>
+<td>2012-12-31 20:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>10.66</td>
+<td>12.880</td>
+<td>60</td>
+<td>11.0014</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6490</td>
+<td>2012-12-31 21:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>12.880</td>
+<td>60</td>
+<td>11.0014</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6491</td>
+<td>2012-12-31 22:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>13.635</td>
+<td>56</td>
+<td>8.9981</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6492</td>
+<td>2012-12-31 23:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>13.635</td>
+<td>65</td>
+<td>8.9981</td>
+</tr>
+</tbody>
+</table>
+
+<p>6493 rows × 9 columns</p>
+</div>
+</div>
+</div>
+<p><code>-</code> train/test가 나누어진 시점 해석</p>
+<div id="87da1e2f-f601-4e15-8872-175c7bfa33de" class="cell" data-tags="[]" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>display(<span class="st">"train"</span>,df_train[::<span class="dv">24</span>][:<span class="dv">20</span>], <span class="st">"test"</span>,df_test[::<span class="dv">24</span>][:<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<pre><code>'train'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">datetime</th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">holiday</th>
+<th data-quarto-table-cell-role="th">workingday</th>
+<th data-quarto-table-cell-role="th">weather</th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">atemp</th>
+<th data-quarto-table-cell-role="th">humidity</th>
+<th data-quarto-table-cell-role="th">windspeed</th>
+<th data-quarto-table-cell-role="th">casual</th>
+<th data-quarto-table-cell-role="th">registered</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2011-01-01 00:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>14.395</td>
+<td>81</td>
+<td>0.0000</td>
+<td>3</td>
+<td>13</td>
+<td>16</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">24</td>
+<td>2011-01-02 00:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>18.86</td>
+<td>22.725</td>
+<td>88</td>
+<td>19.9995</td>
+<td>4</td>
+<td>13</td>
+<td>17</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">48</td>
+<td>2011-01-03 01:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>8.20</td>
+<td>8.335</td>
+<td>44</td>
+<td>27.9993</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">72</td>
+<td>2011-01-04 04:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>5.74</td>
+<td>9.090</td>
+<td>63</td>
+<td>6.0032</td>
+<td>0</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">96</td>
+<td>2011-01-05 05:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>9.02</td>
+<td>11.365</td>
+<td>47</td>
+<td>11.0014</td>
+<td>0</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">120</td>
+<td>2011-01-06 06:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>5.74</td>
+<td>8.335</td>
+<td>63</td>
+<td>7.0015</td>
+<td>0</td>
+<td>36</td>
+<td>36</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">144</td>
+<td>2011-01-07 07:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>8.20</td>
+<td>10.605</td>
+<td>69</td>
+<td>8.9981</td>
+<td>8</td>
+<td>76</td>
+<td>84</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">168</td>
+<td>2011-01-08 07:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+<td>6.56</td>
+<td>9.090</td>
+<td>74</td>
+<td>7.0015</td>
+<td>1</td>
+<td>8</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">192</td>
+<td>2011-01-09 07:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>3.28</td>
+<td>4.545</td>
+<td>53</td>
+<td>12.9980</td>
+<td>1</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">216</td>
+<td>2011-01-10 07:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>4.92</td>
+<td>6.060</td>
+<td>50</td>
+<td>15.0013</td>
+<td>2</td>
+<td>75</td>
+<td>77</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">240</td>
+<td>2011-01-11 09:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>7.38</td>
+<td>9.850</td>
+<td>51</td>
+<td>11.0014</td>
+<td>3</td>
+<td>127</td>
+<td>130</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">264</td>
+<td>2011-01-12 11:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>8.20</td>
+<td>9.090</td>
+<td>51</td>
+<td>26.0027</td>
+<td>3</td>
+<td>32</td>
+<td>35</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">288</td>
+<td>2011-01-13 11:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>8.20</td>
+<td>8.335</td>
+<td>44</td>
+<td>30.0026</td>
+<td>4</td>
+<td>33</td>
+<td>37</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">312</td>
+<td>2011-01-14 12:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>8.20</td>
+<td>9.850</td>
+<td>44</td>
+<td>16.9979</td>
+<td>2</td>
+<td>59</td>
+<td>61</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">336</td>
+<td>2011-01-15 12:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>11.365</td>
+<td>48</td>
+<td>15.0013</td>
+<td>15</td>
+<td>74</td>
+<td>89</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">360</td>
+<td>2011-01-16 12:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>10.605</td>
+<td>41</td>
+<td>19.0012</td>
+<td>29</td>
+<td>75</td>
+<td>104</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">384</td>
+<td>2011-01-17 12:00:00</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>2</td>
+<td>7.38</td>
+<td>9.850</td>
+<td>47</td>
+<td>8.9981</td>
+<td>10</td>
+<td>70</td>
+<td>80</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">408</td>
+<td>2011-01-19 00:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>9.02</td>
+<td>13.635</td>
+<td>93</td>
+<td>0.0000</td>
+<td>0</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">432</td>
+<td>2011-02-01 01:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>6.56</td>
+<td>9.090</td>
+<td>69</td>
+<td>7.0015</td>
+<td>0</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">456</td>
+<td>2011-02-02 02:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>3</td>
+<td>9.02</td>
+<td>11.365</td>
+<td>93</td>
+<td>8.9981</td>
+<td>4</td>
+<td>0</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<pre><code>'test'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">datetime</th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">holiday</th>
+<th data-quarto-table-cell-role="th">workingday</th>
+<th data-quarto-table-cell-role="th">weather</th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">atemp</th>
+<th data-quarto-table-cell-role="th">humidity</th>
+<th data-quarto-table-cell-role="th">windspeed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2011-01-20 00:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>10.66</td>
+<td>11.365</td>
+<td>56</td>
+<td>26.0027</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">24</td>
+<td>2011-01-21 00:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>9.84</td>
+<td>11.365</td>
+<td>70</td>
+<td>16.9979</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">48</td>
+<td>2011-01-22 00:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1.64</td>
+<td>1.515</td>
+<td>45</td>
+<td>16.9979</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">72</td>
+<td>2011-01-23 01:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1.64</td>
+<td>3.790</td>
+<td>57</td>
+<td>7.0015</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">96</td>
+<td>2011-01-24 03:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1.64</td>
+<td>1.515</td>
+<td>45</td>
+<td>16.9979</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">120</td>
+<td>2011-01-25 04:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>5.74</td>
+<td>8.335</td>
+<td>74</td>
+<td>7.0015</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">144</td>
+<td>2011-01-26 06:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>3</td>
+<td>8.20</td>
+<td>9.090</td>
+<td>86</td>
+<td>19.0012</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">168</td>
+<td>2011-01-28 05:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>7.38</td>
+<td>10.605</td>
+<td>80</td>
+<td>7.0015</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">192</td>
+<td>2011-01-29 06:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>6.56</td>
+<td>9.090</td>
+<td>64</td>
+<td>8.9981</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">216</td>
+<td>2011-01-30 07:00:00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>5.74</td>
+<td>10.605</td>
+<td>86</td>
+<td>0.0000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li>자료가 세개의 토막으로 되어있어..!!</li>
+</ul>
+<p><code>-</code> 시계열분석을 해야하나?</p>
+<p>코드들을 확인 (<a href="https://www.kaggle.com/c/bike-sharing-demand/code?competitionId=3948&amp;sortBy=voteCount" class="uri">https://www.kaggle.com/c/bike-sharing-demand/code?competitionId=3948&amp;sortBy=voteCount</a>) -&gt; 시계열분석은 아닌것 같지않어?</p>
+<p><code>-</code> 데이터분석전략: 딱히 기세를 모델링할 필요를 못느끼겠음.</p>
+<ul>
+<li>오히려 시계열을 피처엔지어링하여 회귀문제로 바꾸는게 적절하다.</li>
+<li>시계열 -&gt; 요일,시간의 피처추출 + 외부자료를 활용하여 휴일유무 체크 + 외부자료를 해당요일의 날씨체크 -&gt; lm(y~X)의 회귀문제로 해석!</li>
+</ul>
+</section>
+<section id="적합1---제출1" class="level1">
+<h1>4. 적합1 -&gt; 제출1</h1>
+<section id="a.-적합" class="level2">
+<h2 class="anchored" data-anchor-id="a.-적합">A. 적합</h2>
+<div id="e74b4f01-8005-4d67-b7b0-b88f98ad9e3d" class="cell" data-tags="[]" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span>(df_train.columns) <span class="op">-</span> <span class="bu">set</span>(df_test.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>{'casual', 'count', 'registered'}</code></pre>
+</div>
+</div>
+<div id="19b92695-4315-4b58-b34f-7b61de3cf6c2" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sampleSubmission.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">datetime</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2011-01-20 00:00:00</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2011-01-20 01:00:00</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2011-01-20 02:00:00</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2011-01-20 03:00:00</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2011-01-20 04:00:00</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<ul>
+<li>count를 맞추자!</li>
+</ul>
+<p><code>-</code> 데이터 전처리(step1)</p>
+<div id="ed837b5d-ae58-4629-9eae-469672455aab" class="cell" data-tags="[]" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train.copy()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test.copy()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---# </span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'casual'</span>,<span class="st">'registered'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>-</code> step2~4</p>
+<div id="56820efa-cb74-4ad6-b5cb-50819cba5d7e" class="cell" data-tags="[]" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step1 -- pass </span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co"># step2</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(label<span class="op">=</span><span class="st">'count'</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step3</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>predictr.fit(df_train_featured)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># step4 </span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> predictr.predict(df_train_featured)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>yyhat <span class="op">=</span> predictr.predict(df_test_featured)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231210_063818/"
+Beginning AutoGluon training ...
+AutoGluon will save models to "AutogluonModels/ag-20231210_063818/"
+AutoGluon Version:  0.8.2
+Python Version:     3.8.18
+Operating System:   Linux
+Platform Machine:   x86_64
+Platform Version:   #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2
+Disk Space Avail:   651.50 GB / 982.82 GB (66.3%)
+Train Data Rows:    10886
+Train Data Columns: 9
+Label Column: count
+Preprocessing data ...
+AutoGluon infers your prediction problem is: 'regression' (because dtype of label-column == int and many unique label-values observed).
+    Label info (max, min, mean, stddev): (977, 1, 191.57413, 181.14445)
+    If 'regression' is not the correct problem_type, please manually specify the problem_type parameter during predictor init (You may specify problem_type as one of: ['binary', 'multiclass', 'regression'])
+Using Feature Generators to preprocess the data ...
+Fitting AutoMLPipelineFeatureGenerator...
+    Available Memory:                    128823.96 MB
+    Train Data (Original)  Memory Usage: 1.52 MB (0.0% of available memory)
+    Inferring data type of each feature based on column values. Set feature_metadata_in to manually specify special dtypes of the features.
+    Stage 1 Generators:
+        Fitting AsTypeFeatureGenerator...
+            Note: Converting 2 features to boolean dtype as they only contain 2 unique values.
+    Stage 2 Generators:
+        Fitting FillNaFeatureGenerator...
+    Stage 3 Generators:
+        Fitting IdentityFeatureGenerator...
+        Fitting DatetimeFeatureGenerator...
+    Stage 4 Generators:
+        Fitting DropUniqueFeatureGenerator...
+    Stage 5 Generators:
+        Fitting DropDuplicatesFeatureGenerator...
+    Types of features in original data (raw dtype, special dtypes):
+        ('float', [])                      : 3 | ['temp', 'atemp', 'windspeed']
+        ('int', [])                        : 5 | ['season', 'holiday', 'workingday', 'weather', 'humidity']
+        ('object', ['datetime_as_object']) : 1 | ['datetime']
+    Types of features in processed data (raw dtype, special dtypes):
+        ('float', [])                : 3 | ['temp', 'atemp', 'windspeed']
+        ('int', [])                  : 3 | ['season', 'weather', 'humidity']
+        ('int', ['bool'])            : 2 | ['holiday', 'workingday']
+        ('int', ['datetime_as_int']) : 5 | ['datetime', 'datetime.year', 'datetime.month', 'datetime.day', 'datetime.dayofweek']
+    0.0s = Fit runtime
+    9 features in original data used to generate 13 features in processed data.
+    Train Data (Processed) Memory Usage: 0.98 MB (0.0% of available memory)
+Data preprocessing and feature engineering runtime = 0.05s ...
+AutoGluon will gauge predictive performance using evaluation metric: 'root_mean_squared_error'
+    This metric's sign has been flipped to adhere to being higher_is_better. The metric score can be multiplied by -1 to get the metric value.
+    To change this, specify the eval_metric parameter of Predictor()
+Automatically generating train/validation split with holdout_frac=0.1, Train Rows: 9797, Val Rows: 1089
+User-specified model hyperparameters to be fit:
+{
+    'NN_TORCH': {},
+    'GBM': [{'extra_trees': True, 'ag_args': {'name_suffix': 'XT'}}, {}, 'GBMLarge'],
+    'CAT': {},
+    'XGB': {},
+    'FASTAI': {},
+    'RF': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'XT': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
+    'KNN': [{'weights': 'uniform', 'ag_args': {'name_suffix': 'Unif'}}, {'weights': 'distance', 'ag_args': {'name_suffix': 'Dist'}}],
+}
+Fitting 11 L1 models ...
+Fitting model: KNeighborsUnif ...
+    -109.7394    = Validation score   (-root_mean_squared_error)
+    0.08s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: KNeighborsDist ...
+    -92.4421     = Validation score   (-root_mean_squared_error)
+    0.04s    = Training   runtime
+    0.02s    = Validation runtime
+Fitting model: LightGBMXT ...
+    -135.958     = Validation score   (-root_mean_squared_error)
+    0.83s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: LightGBM ...
+    -134.0804    = Validation score   (-root_mean_squared_error)
+    0.59s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: RandomForestMSE ...
+    -122.0128    = Validation score   (-root_mean_squared_error)
+    1.43s    = Training   runtime
+    0.03s    = Validation runtime
+Fitting model: CatBoost ...
+    -134.2362    = Validation score   (-root_mean_squared_error)
+    2.65s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: ExtraTreesMSE ...
+    -128.4294    = Validation score   (-root_mean_squared_error)
+    0.96s    = Training   runtime
+    0.04s    = Validation runtime
+Fitting model: NeuralNetFastAI ...
+    -136.6546    = Validation score   (-root_mean_squared_error)
+    7.3s     = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: XGBoost ...
+    -135.0751    = Validation score   (-root_mean_squared_error)
+    0.73s    = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: NeuralNetTorch ...
+    -138.9909    = Validation score   (-root_mean_squared_error)
+    23.89s   = Training   runtime
+    0.01s    = Validation runtime
+Fitting model: LightGBMLarge ...
+    -132.1736    = Validation score   (-root_mean_squared_error)
+    0.84s    = Training   runtime
+    0.0s     = Validation runtime
+Fitting model: WeightedEnsemble_L2 ...
+    -92.4421     = Validation score   (-root_mean_squared_error)
+    0.17s    = Training   runtime
+    0.0s     = Validation runtime
+AutoGluon training complete, total runtime = 40.62s ... Best model: "WeightedEnsemble_L2"
+TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels/ag-20231210_063818/")</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1000]  valid_set's rmse: 136.065</code></pre>
+</div>
+</div>
+<p><code>-</code> 적합한것을 관찰해보자.</p>
+<div id="53fd9f1a-cd49-469a-ad74-cf2f5a612fca" class="cell" data-tags="[]" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train[<span class="st">'count'</span>][:<span class="dv">300</span>],<span class="st">'--'</span>,label<span class="op">=</span><span class="st">'y'</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>plt.plot(yhat[:<span class="dv">300</span>],alpha<span class="op">=</span><span class="fl">0.5</span>,lw<span class="op">=</span><span class="dv">4</span>,label<span class="op">=</span><span class="st">'yhat'</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>&lt;matplotlib.legend.Legend at 0x7f2d0dede160&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>잘 맞추는데?.. (수상할 정도로)</li>
+</ul>
+</section>
+<section id="b.-제출" class="level2">
+<h2 class="anchored" data-anchor-id="b.-제출">B. 제출</h2>
+<p><code>-</code> 제출</p>
+<div id="d1cd34ae-c9fc-4a9a-bff3-1ca9b9f55682" class="cell" data-tags="[]" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sampleSubmission[<span class="st">'count'</span>] <span class="op">=</span> yyhat </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sampleSubmission.to_csv(<span class="st">"submission.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions submit <span class="op">-</span>c bike<span class="op">-</span>sharing<span class="op">-</span>demand <span class="op">-</span>f submission.csv <span class="op">-</span>m <span class="st">"Message"</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm submission.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|████████████████████████████████████████| 188k/188k [00:02&lt;00:00, 83.1kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+</div>
+<p><code>-</code> 순위확인</p>
+<p><img src="14wk-59.out_files/figure-html/506fc1ac-5ede-4232-ae3f-07dd4a4f716e-1-14wk-59_files/figure-ipynb/3e6cbfcc-4d9f-4feb-b818-8d186d4a9c11-1-a2dfba8a-f80f-4a05-adcb-116b909df78b.png" class="img-fluid"></p>
+<div id="ed1bc14c-b34c-470c-8e0a-56eed3141964" class="cell" data-tags="[]" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dv">3171</span><span class="op">/</span><span class="dv">3242</span> <span class="co"># 냈다면</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<pre><code>0.9780999383096853</code></pre>
+</div>
+</div>
+<p><code>-</code> yyhat을 살펴봄</p>
+<div id="d8754a82-912a-4172-ac31-2734d2858659" class="cell" data-tags="[]" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>plt.plot(yyhat[:<span class="dv">300</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>yhat이랑 모양자체가 너무 다름</li>
+</ul>
+</section>
+</section>
+<section id="적합2---제출2" class="level1">
+<h1>5. 적합2 -&gt; 제출2</h1>
+<section id="a.-피처엔지니어링" class="level2">
+<h2 class="anchored" data-anchor-id="a.-피처엔지니어링">A. 피처엔지니어링</h2>
+<p><code>-</code> 이미 시계열로 적합할 의지가 없으므로 <code>datetime</code>열은 삭제하는게 좋겠음. (인덱스의 역할만 하는 쓸모없는 변수)</p>
+<div id="9b0fef79-f70b-4718-a9f6-5beb12adf432" class="cell" data-tags="[]" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train.copy()</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test.copy()</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#----# </span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'casual'</span>,<span class="st">'registered'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="b.-적합" class="level2">
+<h2 class="anchored" data-anchor-id="b.-적합">B. 적합</h2>
+<p><code>-</code> 조용히 적합 (verbosity=False)</p>
+<div id="81545b4d-4f6e-43fe-9647-fe4297b2d3e0" class="cell" data-tags="[]" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step1 -- pass </span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># step2</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(label<span class="op">=</span><span class="st">'count'</span>,verbosity<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step3</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>predictr.fit(df_train_featured)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># step4 </span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> predictr.predict(df_train_featured)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>yyhat <span class="op">=</span> predictr.predict(df_test_featured)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>-</code> 적합결과 시각화</p>
+<div id="ee604108-bb9b-45f9-b83b-5d291ed13104" class="cell" data-tags="[]" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>plt.plot(df_train[<span class="st">'count'</span>][:<span class="dv">300</span>],<span class="st">'--'</span>,label<span class="op">=</span><span class="st">'y'</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>plt.plot(yhat[:<span class="dv">300</span>],alpha<span class="op">=</span><span class="fl">0.5</span>,lw<span class="op">=</span><span class="dv">4</span>,label<span class="op">=</span><span class="st">'yhat'</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>&lt;matplotlib.legend.Legend at 0x7f2d0c215e20&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-20-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>오히려 좋아</li>
+</ul>
+<div id="277fc053-c8de-4618-843c-e7b241815510" class="cell" data-tags="[]" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>plt.plot(yyhat[:<span class="dv">300</span>],alpha<span class="op">=</span><span class="fl">0.5</span>,lw<span class="op">=</span><span class="dv">4</span>,color<span class="op">=</span><span class="st">'C1'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-21-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p><code>-</code> 더 예쁜 시각화</p>
+<div id="0daf1e20-e6f4-4627-95ba-d911f58d5c69" class="cell" data-tags="[]" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    df_train.assign(count_hat <span class="op">=</span> yhat, dataset_type <span class="op">=</span> <span class="st">'train'</span>),</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    df_test.assign(count_hat <span class="op">=</span> yyhat, dataset_type <span class="op">=</span> <span class="st">'test'</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'datetime'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'datetime'</span>])</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>sns.lineplot(</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    df.sort_values(<span class="st">'datetime'</span>)[:(<span class="dv">24</span><span class="op">*</span><span class="dv">28</span>)],</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'datetime'</span>,y<span class="op">=</span><span class="st">'count'</span>,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">'dataset_type'</span>,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    linestyle<span class="op">=</span><span class="st">'--'</span>,</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    lw<span class="op">=</span><span class="fl">0.8</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>sns.lineplot(</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    df.sort_values(<span class="st">'datetime'</span>)[:(<span class="dv">24</span><span class="op">*</span><span class="dv">28</span>)],</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'datetime'</span>,y<span class="op">=</span><span class="st">'count_hat'</span>,</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">'dataset_type'</span>,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    lw<span class="op">=</span><span class="dv">3</span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.gcf()</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(<span class="dv">8</span>,<span class="dv">2</span>)  <span class="co"># x축 y축 너비조정</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span>  <span class="co"># 글자 기울기 조정</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-22-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>시각화코드를 함수로 구현</p>
+<div id="fe9e94af-bbbd-4564-872d-e7af67c1a667" class="cell" data-tags="[]" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot(yhat,yyhat):</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.concat([</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>        df_train.assign(count_hat <span class="op">=</span> yhat, dataset_type <span class="op">=</span> <span class="st">'train'</span>),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>        df_test.assign(count_hat <span class="op">=</span> yyhat, dataset_type <span class="op">=</span> <span class="st">'test'</span>)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'datetime'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'datetime'</span>])</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    sns.lineplot(</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>        df.sort_values(<span class="st">'datetime'</span>)[:(<span class="dv">24</span><span class="op">*</span><span class="dv">28</span>)],</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="st">'datetime'</span>,y<span class="op">=</span><span class="st">'count'</span>,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>        hue<span class="op">=</span><span class="st">'dataset_type'</span>,</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>        linestyle<span class="op">=</span><span class="st">'--'</span>,</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>        lw<span class="op">=</span><span class="fl">0.8</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    sns.lineplot(</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>        df.sort_values(<span class="st">'datetime'</span>)[:(<span class="dv">24</span><span class="op">*</span><span class="dv">28</span>)],</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="st">'datetime'</span>,y<span class="op">=</span><span class="st">'count_hat'</span>,</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>        hue<span class="op">=</span><span class="st">'dataset_type'</span>,</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>        lw<span class="op">=</span><span class="dv">3</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.gcf()</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>    fig.set_size_inches(<span class="dv">8</span>,<span class="dv">2</span>)</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>    plt.xticks(rotation<span class="op">=</span><span class="dv">15</span>)<span class="op">;</span> </span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>    fig.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ac9fcca3-2101-45f1-8651-99966044b4b6" class="cell" data-tags="[]" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>plot(yhat,yyhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="c.-제출" class="level2">
+<h2 class="anchored" data-anchor-id="c.-제출">C. 제출</h2>
+<p><code>-</code> 제출</p>
+<div id="8f25e78b-44f1-42a1-892e-78846fce7472" class="cell" data-tags="[]" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>sampleSubmission[<span class="st">'count'</span>] <span class="op">=</span> yyhat </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>sampleSubmission.to_csv(<span class="st">"submission.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions submit <span class="op">-</span>c bike<span class="op">-</span>sharing<span class="op">-</span>demand <span class="op">-</span>f submission.csv <span class="op">-</span>m <span class="st">"Message"</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm submission.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|█████████████████████████████████████████| 188k/188k [00:01&lt;00:00, 102kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+</div>
+<p><code>-</code> 순위확인</p>
+<p><img src="14wk-59.out_files/figure-html/01120c59-5806-449e-98d3-a3a5442b9f35-1-14wk-59_files/figure-ipynb/2ef33b9b-c0cb-4da4-a832-0e93da3038ad-1-30adc619-cd43-4c78-ae51-7489286480f0.png" class="img-fluid"></p>
+<div id="2d2976f5-a146-424e-b43d-f0fc24f3245d" class="cell" data-tags="[]" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2951</span><span class="op">/</span><span class="dv">3242</span> <span class="co"># 냈다면</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<pre><code>0.9102405922270204</code></pre>
+</div>
+</div>
+</section>
+<section id="d.-pipeline-automation-싹다-함수로-구현" class="level2">
+<h2 class="anchored" data-anchor-id="d.-pipeline-automation-싹다-함수로-구현">D. Pipeline Automation – 싹다 함수로 구현</h2>
+<div id="973c5cb7-14e6-4f25-9bbc-037da2807744" class="cell" data-tags="[]" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_predict(df_train_featured, df_test_featured):</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># step1 -- pass </span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># step2</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    predictr <span class="op">=</span> TabularPredictor(label<span class="op">=</span><span class="st">'count'</span>,verbosity<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># step3</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    predictr.fit(df_train_featured)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># step4 </span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    yhat <span class="op">=</span> predictr.predict(df_train_featured)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>    yyhat <span class="op">=</span> predictr.predict(df_test_featured)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># display</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    display(predictr.leaderboard())</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> yhat, yyhat </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="40d6a839-872b-4ca3-8888-6f61aad9b9db" class="cell" data-tags="[]" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> submit(yyhat):</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    sampleSubmission[<span class="st">'count'</span>] <span class="op">=</span> yyhat </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    sampleSubmission[<span class="st">'count'</span>] <span class="op">=</span> sampleSubmission[<span class="st">'count'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x <span class="cf">if</span> x<span class="op">&gt;</span><span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    sampleSubmission.to_csv(<span class="st">"submission.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>kaggle competitions submit <span class="op">-</span>c bike<span class="op">-</span>sharing<span class="op">-</span>demand <span class="op">-</span>f submission.csv <span class="op">-</span>m <span class="st">"Message"</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>rm submission.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d58d542f-47b1-4a68-8353-1c5a88b05b09" class="cell" data-tags="[]" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> auto(df_train_featured, df_test_featured):</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    yhat,yyhat <span class="op">=</span> fit_predict(df_train_featured, df_test_featured)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    plot(yhat,yyhat)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    submit(yyhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="15f858d8-6930-4232-96ff-7f2f61710bfb" class="cell" data-tags="[]" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>auto(df_train_featured,df_test_featured)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model   score_val  pred_time_val   fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0   WeightedEnsemble_L2 -146.942817       0.093126  19.834418                0.000256           0.173803            2       True         12
+1              CatBoost -148.454154       0.001523   0.862499                0.001523           0.862499            1       True          6
+2       NeuralNetFastAI -148.887325       0.009749   5.793004                0.009749           5.793004            1       True          8
+3         LightGBMLarge -149.213280       0.002825   0.750371                0.002825           0.750371            1       True         11
+4            LightGBMXT -149.261116       0.011158   0.808311                0.011158           0.808311            1       True          3
+5               XGBoost -149.642096       0.006088   0.241403                0.006088           0.241403            1       True          9
+6              LightGBM -149.739171       0.001782   0.447107                0.001782           0.447107            1       True          4
+7        NeuralNetTorch -151.552860       0.005795   9.768490                0.005795           9.768490            1       True         10
+8         ExtraTreesMSE -156.627917       0.030079   0.714512                0.030079           0.714512            1       True          7
+9       RandomForestMSE -157.475877       0.031739   0.963428                0.031739           0.963428            1       True          5
+10       KNeighborsUnif -165.533975       0.007050   0.052896                0.007050           0.052896            1       True          1
+11       KNeighborsDist -176.146340       0.006670   0.050870                0.006670           0.050870            1       True          2
+Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|████████████████████████████████████████| 243k/243k [00:02&lt;00:00, 98.7kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WeightedEnsemble_L2</td>
+<td>-146.942817</td>
+<td>0.093126</td>
+<td>19.834418</td>
+<td>0.000256</td>
+<td>0.173803</td>
+<td>2</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>CatBoost</td>
+<td>-148.454154</td>
+<td>0.001523</td>
+<td>0.862499</td>
+<td>0.001523</td>
+<td>0.862499</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>NeuralNetFastAI</td>
+<td>-148.887325</td>
+<td>0.009749</td>
+<td>5.793004</td>
+<td>0.009749</td>
+<td>5.793004</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>LightGBMLarge</td>
+<td>-149.213280</td>
+<td>0.002825</td>
+<td>0.750371</td>
+<td>0.002825</td>
+<td>0.750371</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>LightGBMXT</td>
+<td>-149.261116</td>
+<td>0.011158</td>
+<td>0.808311</td>
+<td>0.011158</td>
+<td>0.808311</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>XGBoost</td>
+<td>-149.642096</td>
+<td>0.006088</td>
+<td>0.241403</td>
+<td>0.006088</td>
+<td>0.241403</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>LightGBM</td>
+<td>-149.739171</td>
+<td>0.001782</td>
+<td>0.447107</td>
+<td>0.001782</td>
+<td>0.447107</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>NeuralNetTorch</td>
+<td>-151.552860</td>
+<td>0.005795</td>
+<td>9.768490</td>
+<td>0.005795</td>
+<td>9.768490</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>ExtraTreesMSE</td>
+<td>-156.627917</td>
+<td>0.030079</td>
+<td>0.714512</td>
+<td>0.030079</td>
+<td>0.714512</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>RandomForestMSE</td>
+<td>-157.475877</td>
+<td>0.031739</td>
+<td>0.963428</td>
+<td>0.031739</td>
+<td>0.963428</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>KNeighborsUnif</td>
+<td>-165.533975</td>
+<td>0.007050</td>
+<td>0.052896</td>
+<td>0.007050</td>
+<td>0.052896</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>KNeighborsDist</td>
+<td>-176.146340</td>
+<td>0.006670</td>
+<td>0.050870</td>
+<td>0.006670</td>
+<td>0.050870</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-30-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="적합3---제출3" class="level1">
+<h1>6. 적합3 -&gt; 제출3</h1>
+<section id="a.-시간정보-피처엔지니어링" class="level2">
+<h2 class="anchored" data-anchor-id="a.-시간정보-피처엔지니어링">A. 시간정보 피처엔지니어링</h2>
+<div id="f916da54-984a-4322-8051-b432edc0cfb7" class="cell" data-tags="[]" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train.copy()</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test.copy()</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co">#----# </span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'casual'</span>,<span class="st">'registered'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="b.-적합---시각화---제출" class="level2">
+<h2 class="anchored" data-anchor-id="b.-적합---시각화---제출">B. 적합 -&gt; 시각화 -&gt; 제출</h2>
+<div id="aed445ad-d44f-4491-ad53-d7d5cba14388" class="cell" data-tags="[]" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>auto(df_train_featured,df_test_featured)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model   score_val  pred_time_val   fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0   WeightedEnsemble_L2  -59.456941       0.102968  64.794636                0.000255           0.167149            2       True         12
+1         LightGBMLarge  -60.899261       0.007749   1.221596                0.007749           1.221596            1       True         11
+2              CatBoost  -61.268467       0.003084  24.933573                0.003084          24.933573            1       True          6
+3              LightGBM  -61.447456       0.021623   1.687860                0.021623           1.687860            1       True          4
+4               XGBoost  -61.749260       0.007222   0.476288                0.007222           0.476288            1       True          9
+5            LightGBMXT  -62.400538       0.057122   3.474121                0.057122           3.474121            1       True          3
+6       RandomForestMSE  -67.993149       0.038693   1.092855                0.038693           1.092855            1       True          5
+7         ExtraTreesMSE  -68.246627       0.034320   0.640087                0.034320           0.640087            1       True          7
+8        NeuralNetTorch  -68.927865       0.005912  32.834049                0.005912          32.834049            1       True         10
+9       NeuralNetFastAI  -70.979733       0.010306   7.108909                0.010306           7.108909            1       True          8
+10       KNeighborsDist -115.023130       0.008851   0.055676                0.008851           0.055676            1       True          2
+11       KNeighborsUnif -117.802477       0.008756   0.056952                0.008756           0.056952            1       True          1
+Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|█████████████████████████████████████████| 240k/240k [00:01&lt;00:00, 124kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WeightedEnsemble_L2</td>
+<td>-59.456941</td>
+<td>0.102968</td>
+<td>64.794636</td>
+<td>0.000255</td>
+<td>0.167149</td>
+<td>2</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>LightGBMLarge</td>
+<td>-60.899261</td>
+<td>0.007749</td>
+<td>1.221596</td>
+<td>0.007749</td>
+<td>1.221596</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>CatBoost</td>
+<td>-61.268467</td>
+<td>0.003084</td>
+<td>24.933573</td>
+<td>0.003084</td>
+<td>24.933573</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>LightGBM</td>
+<td>-61.447456</td>
+<td>0.021623</td>
+<td>1.687860</td>
+<td>0.021623</td>
+<td>1.687860</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>XGBoost</td>
+<td>-61.749260</td>
+<td>0.007222</td>
+<td>0.476288</td>
+<td>0.007222</td>
+<td>0.476288</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>LightGBMXT</td>
+<td>-62.400538</td>
+<td>0.057122</td>
+<td>3.474121</td>
+<td>0.057122</td>
+<td>3.474121</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>RandomForestMSE</td>
+<td>-67.993149</td>
+<td>0.038693</td>
+<td>1.092855</td>
+<td>0.038693</td>
+<td>1.092855</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>ExtraTreesMSE</td>
+<td>-68.246627</td>
+<td>0.034320</td>
+<td>0.640087</td>
+<td>0.034320</td>
+<td>0.640087</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>NeuralNetTorch</td>
+<td>-68.927865</td>
+<td>0.005912</td>
+<td>32.834049</td>
+<td>0.005912</td>
+<td>32.834049</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>NeuralNetFastAI</td>
+<td>-70.979733</td>
+<td>0.010306</td>
+<td>7.108909</td>
+<td>0.010306</td>
+<td>7.108909</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>KNeighborsDist</td>
+<td>-115.023130</td>
+<td>0.008851</td>
+<td>0.055676</td>
+<td>0.008851</td>
+<td>0.055676</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>KNeighborsUnif</td>
+<td>-117.802477</td>
+<td>0.008756</td>
+<td>0.056952</td>
+<td>0.008756</td>
+<td>0.056952</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-32-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<p><img src="14wk-59.out_files/figure-html/bd6f1616-87ee-42c1-a76a-55f0345c1ceb-1-14wk-59_files/figure-ipynb/6c6f6113-d81b-442c-8c56-98678a74f46c-1-2bd2a3ef-29f9-42c4-b8d4-58097523a14b.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="추가적인-피처엔지니어링" class="level1">
+<h1>7. 추가적인 피처엔지니어링</h1>
+<section id="a.-step1-관련없는-변수-삭제" class="level2">
+<h2 class="anchored" data-anchor-id="a.-step1-관련없는-변수-삭제">A. Step1 – 관련없는 변수 삭제</h2>
+<p><code>-</code> 지금까지 수행한 피처엔지니어링</p>
+<div id="eecaf8e7-0a76-4d01-bf97-4a21e790f9ef" class="cell" data-tags="[]" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train.copy()</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test.copy()</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co">#----# </span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'casual'</span>,<span class="st">'registered'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b5534925-5fe6-4ca4-8c0c-12ec7544ea7b" class="cell" data-tags="[]" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>sns.heatmap(df_train_featured.set_index(<span class="st">'count'</span>).reset_index().corr(),vmin<span class="op">=-</span><span class="dv">1</span>,cmap<span class="op">=</span><span class="st">'bwr'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>&lt;AxesSubplot: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-34-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li><code>holiday</code>, <code>workingday</code>, <code>weekday</code>는 <code>count</code>와 관련이 없어보인다. –&gt; 제외하고 분석</li>
+</ul>
+<div id="d5718710-da7e-45b5-94b7-c96d9c49483c" class="cell" data-tags="[]" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>auto(</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    df_train_featured.drop([<span class="st">'holiday'</span>, <span class="st">'workingday'</span>, <span class="st">'weekday'</span>],axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    df_test_featured.drop([<span class="st">'holiday'</span>, <span class="st">'workingday'</span>, <span class="st">'weekday'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model   score_val  pred_time_val   fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0   WeightedEnsemble_L2 -100.669244       0.052277  41.755835                0.000254           0.174775            2       True         12
+1              CatBoost -101.264453       0.001435   1.276704                0.001435           1.276704            1       True          6
+2            LightGBMXT -102.499627       0.011276   0.884664                0.011276           0.884664            1       True          3
+3         LightGBMLarge -102.767101       0.002414   0.788208                0.002414           0.788208            1       True         11
+4               XGBoost -103.481823       0.002760   0.260296                0.002760           0.260296            1       True          9
+5              LightGBM -103.565687       0.004105   0.565680                0.004105           0.565680            1       True          4
+6        NeuralNetTorch -104.992742       0.005868  30.550567                0.005868          30.550567            1       True         10
+7       NeuralNetFastAI -105.342264       0.009668   7.785035                0.009668           7.785035            1       True          8
+8       RandomForestMSE -106.378229       0.032638   1.180547                0.032638           1.180547            1       True          5
+9         ExtraTreesMSE -106.730503       0.039648   0.762568                0.039648           0.762568            1       True          7
+10       KNeighborsUnif -128.806002       0.007811   0.067189                0.007811           0.067189            1       True          1
+11       KNeighborsDist -128.946333       0.007767   0.064981                0.007767           0.064981            1       True          2
+Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|█████████████████████████████████████████| 242k/242k [00:02&lt;00:00, 113kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WeightedEnsemble_L2</td>
+<td>-100.669244</td>
+<td>0.052277</td>
+<td>41.755835</td>
+<td>0.000254</td>
+<td>0.174775</td>
+<td>2</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>CatBoost</td>
+<td>-101.264453</td>
+<td>0.001435</td>
+<td>1.276704</td>
+<td>0.001435</td>
+<td>1.276704</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>LightGBMXT</td>
+<td>-102.499627</td>
+<td>0.011276</td>
+<td>0.884664</td>
+<td>0.011276</td>
+<td>0.884664</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>LightGBMLarge</td>
+<td>-102.767101</td>
+<td>0.002414</td>
+<td>0.788208</td>
+<td>0.002414</td>
+<td>0.788208</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>XGBoost</td>
+<td>-103.481823</td>
+<td>0.002760</td>
+<td>0.260296</td>
+<td>0.002760</td>
+<td>0.260296</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>LightGBM</td>
+<td>-103.565687</td>
+<td>0.004105</td>
+<td>0.565680</td>
+<td>0.004105</td>
+<td>0.565680</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>NeuralNetTorch</td>
+<td>-104.992742</td>
+<td>0.005868</td>
+<td>30.550567</td>
+<td>0.005868</td>
+<td>30.550567</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>NeuralNetFastAI</td>
+<td>-105.342264</td>
+<td>0.009668</td>
+<td>7.785035</td>
+<td>0.009668</td>
+<td>7.785035</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>RandomForestMSE</td>
+<td>-106.378229</td>
+<td>0.032638</td>
+<td>1.180547</td>
+<td>0.032638</td>
+<td>1.180547</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>ExtraTreesMSE</td>
+<td>-106.730503</td>
+<td>0.039648</td>
+<td>0.762568</td>
+<td>0.039648</td>
+<td>0.762568</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>KNeighborsUnif</td>
+<td>-128.806002</td>
+<td>0.007811</td>
+<td>0.067189</td>
+<td>0.007811</td>
+<td>0.067189</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>KNeighborsDist</td>
+<td>-128.946333</td>
+<td>0.007767</td>
+<td>0.064981</td>
+<td>0.007767</td>
+<td>0.064981</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-35-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<p><img src="14wk-59.out_files/figure-html/0674ecbb-ffba-4034-a789-a7644268f637-1-14wk-59_files/figure-ipynb/67a2af95-5d47-486b-874a-57ce871186ca-1-49ef3337-8781-46bd-9f3e-d139676bf46e.png" class="img-fluid"></p>
+<ul>
+<li>안좋아졌음..</li>
+</ul>
+<p><code>-</code> 왜 이런 결과가 나오는가?</p>
+<p><code>-</code> 참고: https://guebin.github.io/DV2023/posts/02wk-1.html</p>
+<div id="81141df6-9c43-4412-8705-448018ecaea4" class="cell" data-tags="[]" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>sex <span class="op">=</span>  np.array([<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]<span class="op">*</span><span class="dv">100</span><span class="op">+</span>[<span class="dv">0</span>] <span class="op">+</span> [<span class="dv">1</span>]<span class="op">+</span>[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]<span class="op">*</span><span class="dv">100</span> <span class="op">+</span> [<span class="dv">2</span>]<span class="op">*</span><span class="dv">401</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>surv <span class="op">=</span> np.array([<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>]<span class="op">*</span><span class="dv">100</span><span class="op">+</span>[<span class="dv">1</span>] <span class="op">+</span> [<span class="dv">0</span>]<span class="op">+</span>[<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>]<span class="op">*</span><span class="dv">100</span> <span class="op">+</span> [<span class="dv">0</span>]<span class="op">*</span><span class="dv">401</span>) </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>surv_conti <span class="op">=</span> surv <span class="op">+</span> np.random.randn(<span class="bu">len</span>(surv))<span class="op">*</span><span class="fl">0.1</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>_df <span class="op">=</span> pd.DataFrame({<span class="st">'sex'</span>:sex, <span class="st">'surv'</span>:surv, <span class="st">'surv_conti'</span>:surv_conti})</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>_df.corr()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">surv</th>
+<th data-quarto-table-cell-role="th">surv_conti</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">sex</td>
+<td>1.00000</td>
+<td>-0.002160</td>
+<td>0.006710</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">surv</td>
+<td>-0.00216</td>
+<td>1.000000</td>
+<td>0.978614</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">surv_conti</td>
+<td>0.00671</td>
+<td>0.978614</td>
+<td>1.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="53e2e4df-d491-43b1-964f-e5da971b47bf" class="cell" data-tags="[]" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(_df, x<span class="op">=</span><span class="st">'sex'</span>,y<span class="op">=</span><span class="st">'surv_conti'</span>,alpha<span class="op">=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<pre><code>&lt;AxesSubplot: xlabel='sex', ylabel='surv_conti'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-37-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="0205520e-5a11-4b1c-bc25-1208ec6448b6" class="cell" data-tags="[]" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>surv_conti.mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="54">
+<pre><code>0.33106272309886425</code></pre>
+</div>
+</div>
+<div id="98196467-d2a2-4dec-bcb3-ed9e2cc78d3c" class="cell" data-tags="[]" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>sns.heatmap(_df.corr(),cmap<span class="op">=</span><span class="st">'bwr'</span>,vmin<span class="op">=-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="55">
+<pre><code>&lt;AxesSubplot: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-39-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p><code>-</code> 우리의 예제</p>
+<div id="b60b0dc8-7af7-4d20-8cdc-44175a03f0b0" class="cell" data-tags="[]" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>    df_train_featured,</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'holiday'</span>,</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">'count'</span>,</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.1</span></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="56">
+<pre><code>&lt;AxesSubplot: xlabel='holiday', ylabel='count'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-40-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="4c68265e-24a9-44dd-b855-f40f0d18c522" class="cell" data-tags="[]" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>    df_train_featured,</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'weekday'</span>,</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">'count'</span>,</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.1</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<pre><code>&lt;AxesSubplot: xlabel='weekday', ylabel='count'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-41-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="6f8316e6-7421-40f4-b88c-a88f03dab3a1" class="cell" data-tags="[]" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>    df_train_featured,</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">'workingday'</span>,</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span><span class="st">'count'</span>,</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.1</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>&lt;AxesSubplot: xlabel='workingday', ylabel='count'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-42-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="b.-step2-atemp-혹은-temp-삭제" class="level2">
+<h2 class="anchored" data-anchor-id="b.-step2-atemp-혹은-temp-삭제">B. Step2 – atemp 혹은 temp 삭제</h2>
+<p><code>-</code> 지금까지 한 피처엔지니어링</p>
+<div id="484dc102-0292-46f0-8695-d9f22843d671" class="cell" data-tags="[]" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train.copy()</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test.copy()</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="co">#----# </span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'casual'</span>,<span class="st">'registered'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="4aedff2f-f1db-498b-9b52-d41053889300" class="cell" data-tags="[]" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>sns.heatmap(df_train_featured.set_index(<span class="st">'count'</span>).reset_index().corr(),vmin<span class="op">=-</span><span class="dv">1</span>,cmap<span class="op">=</span><span class="st">'bwr'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+<pre><code>&lt;AxesSubplot: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-44-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<ul>
+<li>temp와 atemp가 동시에 있어서 공선성 문제를 만들 수 있어보임.</li>
+<li>둘중 하나를 제거하는게 좋을것 같음.</li>
+</ul>
+<div id="b5f66018-652a-493d-ad5c-78c6bb4c9a32" class="cell" data-tags="[]" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>auto(</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    df_train_featured.drop([<span class="st">'temp'</span>],axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>    df_test_featured.drop([<span class="st">'temp'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model   score_val  pred_time_val   fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0   WeightedEnsemble_L2  -59.511984       0.097477  58.259779                0.000259           0.167847            2       True         12
+1         LightGBMLarge  -61.029920       0.008677   1.338407                0.008677           1.338407            1       True         11
+2              LightGBM  -61.580307       0.019255   1.537220                0.019255           1.537220            1       True          4
+3              CatBoost  -61.849961       0.001914  17.761223                0.001914          17.761223            1       True          6
+4               XGBoost  -62.741724       0.007695   0.495664                0.007695           0.495664            1       True          9
+5            LightGBMXT  -63.351618       0.053134   3.360234                0.053134           3.360234            1       True          3
+6         ExtraTreesMSE  -67.852239       0.036566   0.597020                0.036566           0.597020            1       True          7
+7        NeuralNetTorch  -68.046825       0.006544  33.599183                0.006544          33.599183            1       True         10
+8       RandomForestMSE  -68.525817       0.037002   0.909598                0.037002           0.909598            1       True          5
+9       NeuralNetFastAI  -72.517457       0.009779   6.932450                0.009779           6.932450            1       True          8
+10       KNeighborsDist -114.334789       0.008465   0.068125                0.008465           0.068125            1       True          2
+11       KNeighborsUnif -116.835940       0.008546   0.069387                0.008546           0.069387            1       True          1
+Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|█████████████████████████████████████████| 241k/241k [00:01&lt;00:00, 173kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WeightedEnsemble_L2</td>
+<td>-59.511984</td>
+<td>0.097477</td>
+<td>58.259779</td>
+<td>0.000259</td>
+<td>0.167847</td>
+<td>2</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>LightGBMLarge</td>
+<td>-61.029920</td>
+<td>0.008677</td>
+<td>1.338407</td>
+<td>0.008677</td>
+<td>1.338407</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>LightGBM</td>
+<td>-61.580307</td>
+<td>0.019255</td>
+<td>1.537220</td>
+<td>0.019255</td>
+<td>1.537220</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>CatBoost</td>
+<td>-61.849961</td>
+<td>0.001914</td>
+<td>17.761223</td>
+<td>0.001914</td>
+<td>17.761223</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>XGBoost</td>
+<td>-62.741724</td>
+<td>0.007695</td>
+<td>0.495664</td>
+<td>0.007695</td>
+<td>0.495664</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>LightGBMXT</td>
+<td>-63.351618</td>
+<td>0.053134</td>
+<td>3.360234</td>
+<td>0.053134</td>
+<td>3.360234</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>ExtraTreesMSE</td>
+<td>-67.852239</td>
+<td>0.036566</td>
+<td>0.597020</td>
+<td>0.036566</td>
+<td>0.597020</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>NeuralNetTorch</td>
+<td>-68.046825</td>
+<td>0.006544</td>
+<td>33.599183</td>
+<td>0.006544</td>
+<td>33.599183</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>RandomForestMSE</td>
+<td>-68.525817</td>
+<td>0.037002</td>
+<td>0.909598</td>
+<td>0.037002</td>
+<td>0.909598</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>NeuralNetFastAI</td>
+<td>-72.517457</td>
+<td>0.009779</td>
+<td>6.932450</td>
+<td>0.009779</td>
+<td>6.932450</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>KNeighborsDist</td>
+<td>-114.334789</td>
+<td>0.008465</td>
+<td>0.068125</td>
+<td>0.008465</td>
+<td>0.068125</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>KNeighborsUnif</td>
+<td>-116.835940</td>
+<td>0.008546</td>
+<td>0.069387</td>
+<td>0.008546</td>
+<td>0.069387</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-45-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<p><img src="14wk-59.out_files/figure-html/26abd07e-7ad3-45a2-b243-65d65a2d114b-1-14wk-59_files/figure-ipynb/84ddbd0a-0caf-4447-8ebe-629f7fb59eb7-1-ff69533a-5904-4d63-b9c9-5a314d8bbc20.png" class="img-fluid"></p>
+<div id="dba849b4-5579-4aff-9c7a-75cdcfe65a92" class="cell" data-tags="[]" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>auto(</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>    df_train_featured.drop([<span class="st">'atemp'</span>],axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    df_test_featured.drop([<span class="st">'atemp'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model   score_val  pred_time_val   fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0   WeightedEnsemble_L2  -59.317972       0.070543  52.287304                0.000294           0.195872            2       True         12
+1         LightGBMLarge  -60.667457       0.008713   1.374132                0.008713           1.374132            1       True         11
+2              CatBoost  -60.919338       0.001944  11.113472                0.001944          11.113472            1       True          6
+3            LightGBMXT  -61.740606       0.037555   2.373389                0.037555           2.373389            1       True          3
+4              LightGBM  -62.028032       0.016164   1.334948                0.016164           1.334948            1       True          4
+5               XGBoost  -62.503591       0.006645   0.457786                0.006645           0.457786            1       True          9
+6       RandomForestMSE  -67.814371       0.032844   0.992604                0.032844           0.992604            1       True          5
+7         ExtraTreesMSE  -67.843089       0.032126   0.775694                0.032126           0.775694            1       True          7
+8        NeuralNetTorch  -68.163726       0.005872  35.895491                0.005872          35.895491            1       True         10
+9       NeuralNetFastAI  -71.526328       0.009695   6.962153                0.009695           6.962153            1       True          8
+10       KNeighborsDist -112.678494       0.008421   0.068928                0.008421           0.068928            1       True          2
+11       KNeighborsUnif -115.103505       0.008441   0.070454                0.008441           0.070454            1       True          1
+Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|█████████████████████████████████████████| 241k/241k [00:02&lt;00:00, 108kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WeightedEnsemble_L2</td>
+<td>-59.317972</td>
+<td>0.070543</td>
+<td>52.287304</td>
+<td>0.000294</td>
+<td>0.195872</td>
+<td>2</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>LightGBMLarge</td>
+<td>-60.667457</td>
+<td>0.008713</td>
+<td>1.374132</td>
+<td>0.008713</td>
+<td>1.374132</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>CatBoost</td>
+<td>-60.919338</td>
+<td>0.001944</td>
+<td>11.113472</td>
+<td>0.001944</td>
+<td>11.113472</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>LightGBMXT</td>
+<td>-61.740606</td>
+<td>0.037555</td>
+<td>2.373389</td>
+<td>0.037555</td>
+<td>2.373389</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>LightGBM</td>
+<td>-62.028032</td>
+<td>0.016164</td>
+<td>1.334948</td>
+<td>0.016164</td>
+<td>1.334948</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>XGBoost</td>
+<td>-62.503591</td>
+<td>0.006645</td>
+<td>0.457786</td>
+<td>0.006645</td>
+<td>0.457786</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>RandomForestMSE</td>
+<td>-67.814371</td>
+<td>0.032844</td>
+<td>0.992604</td>
+<td>0.032844</td>
+<td>0.992604</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>ExtraTreesMSE</td>
+<td>-67.843089</td>
+<td>0.032126</td>
+<td>0.775694</td>
+<td>0.032126</td>
+<td>0.775694</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>NeuralNetTorch</td>
+<td>-68.163726</td>
+<td>0.005872</td>
+<td>35.895491</td>
+<td>0.005872</td>
+<td>35.895491</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>NeuralNetFastAI</td>
+<td>-71.526328</td>
+<td>0.009695</td>
+<td>6.962153</td>
+<td>0.009695</td>
+<td>6.962153</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>KNeighborsDist</td>
+<td>-112.678494</td>
+<td>0.008421</td>
+<td>0.068928</td>
+<td>0.008421</td>
+<td>0.068928</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>KNeighborsUnif</td>
+<td>-115.103505</td>
+<td>0.008441</td>
+<td>0.070454</td>
+<td>0.008441</td>
+<td>0.070454</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-46-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<p><img src="14wk-59.out_files/figure-html/410c0d69-052b-4bdf-9a12-ca638b7ddc21-1-14wk-59_files/figure-ipynb/d519512e-3ec2-448f-b389-c45852c96014-1-ca8255a1-0056-4381-8196-666ca594d37d.png" class="img-fluid"></p>
+</section>
+<section id="c.-step3-season을-범주로" class="level2">
+<h2 class="anchored" data-anchor-id="c.-step3-season을-범주로">C. Step3 – season을 범주로?</h2>
+<p><code>-</code> 지금까지한 피처엔지니어링</p>
+<div id="ab80550b-bc23-4aa1-a16f-452573f8f95e" class="cell" data-tags="[]" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train.copy()</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test.copy()</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="co">#----# </span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'casual'</span>,<span class="st">'registered'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb75-11"><a href="#cb75-11" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb75-12"><a href="#cb75-12" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb75-13"><a href="#cb75-13" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb75-14"><a href="#cb75-14" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'atemp'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb75-15"><a href="#cb75-15" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test_featured.drop([<span class="st">'atemp'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>-</code> 사실 season의 의미는 <code>season -  1 = spring, 2 = summer, 3 = fall, 4 = winter</code> 임</p>
+<ul>
+<li>지금은 season이 1,2,3,4로 코딩되어 있는데, 이것을 문자열로 바꾸면 더 좋지 않을까?</li>
+</ul>
+<div id="5cac7a6f-f7cf-419a-9ddd-c4cc5857a7d4" class="cell" data-tags="[]" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>auto(</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>    df_train_featured.assign(season <span class="op">=</span> df_train_featured.season.<span class="bu">map</span>({<span class="dv">1</span>:<span class="st">'spring'</span>,<span class="dv">2</span>:<span class="st">'summer'</span>,<span class="dv">3</span>:<span class="st">'fall'</span>,<span class="dv">4</span>:<span class="st">'winter'</span>})),</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    df_test_featured.assign(season <span class="op">=</span> df_train_featured.season.<span class="bu">map</span>({<span class="dv">1</span>:<span class="st">'spring'</span>,<span class="dv">2</span>:<span class="st">'summer'</span>,<span class="dv">3</span>:<span class="st">'fall'</span>,<span class="dv">4</span>:<span class="st">'winter'</span>}))</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  model   score_val  pred_time_val   fit_time  pred_time_val_marginal  fit_time_marginal  stack_level  can_infer  fit_order
+0   WeightedEnsemble_L2  -58.809100       0.124894  88.477947                0.000289           0.195235            2       True         12
+1            LightGBMXT  -61.072683       0.087661   4.569525                0.087661           4.569525            1       True          3
+2         LightGBMLarge  -61.188052       0.012944   1.727106                0.012944           1.727106            1       True         11
+3              CatBoost  -62.040378       0.006600  47.570805                0.006600          47.570805            1       True          6
+4              LightGBM  -62.161719       0.018669   1.587194                0.018669           1.587194            1       True          4
+5               XGBoost  -62.183089       0.010632   0.598557                0.010632           0.598557            1       True          9
+6        NeuralNetTorch  -67.358419       0.006769  33.816719                0.006769          33.816719            1       True         10
+7       RandomForestMSE  -68.346914       0.032818   1.102551                0.032818           1.102551            1       True          5
+8         ExtraTreesMSE  -68.569688       0.035215   0.590428                0.035215           0.590428            1       True          7
+9       NeuralNetFastAI  -72.355712       0.012358   7.412937                0.012358           7.412937            1       True          8
+10       KNeighborsDist -113.647125       0.008502   0.069228                0.008502           0.069228            1       True          2
+11       KNeighborsUnif -116.110797       0.008447   0.071381                0.008447           0.071381            1       True          1
+Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|█████████████████████████████████████████| 240k/240k [00:01&lt;00:00, 124kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">score_val</th>
+<th data-quarto-table-cell-role="th">pred_time_val</th>
+<th data-quarto-table-cell-role="th">fit_time</th>
+<th data-quarto-table-cell-role="th">pred_time_val_marginal</th>
+<th data-quarto-table-cell-role="th">fit_time_marginal</th>
+<th data-quarto-table-cell-role="th">stack_level</th>
+<th data-quarto-table-cell-role="th">can_infer</th>
+<th data-quarto-table-cell-role="th">fit_order</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WeightedEnsemble_L2</td>
+<td>-58.809100</td>
+<td>0.124894</td>
+<td>88.477947</td>
+<td>0.000289</td>
+<td>0.195235</td>
+<td>2</td>
+<td>True</td>
+<td>12</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>LightGBMXT</td>
+<td>-61.072683</td>
+<td>0.087661</td>
+<td>4.569525</td>
+<td>0.087661</td>
+<td>4.569525</td>
+<td>1</td>
+<td>True</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>LightGBMLarge</td>
+<td>-61.188052</td>
+<td>0.012944</td>
+<td>1.727106</td>
+<td>0.012944</td>
+<td>1.727106</td>
+<td>1</td>
+<td>True</td>
+<td>11</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>CatBoost</td>
+<td>-62.040378</td>
+<td>0.006600</td>
+<td>47.570805</td>
+<td>0.006600</td>
+<td>47.570805</td>
+<td>1</td>
+<td>True</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>LightGBM</td>
+<td>-62.161719</td>
+<td>0.018669</td>
+<td>1.587194</td>
+<td>0.018669</td>
+<td>1.587194</td>
+<td>1</td>
+<td>True</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>XGBoost</td>
+<td>-62.183089</td>
+<td>0.010632</td>
+<td>0.598557</td>
+<td>0.010632</td>
+<td>0.598557</td>
+<td>1</td>
+<td>True</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>NeuralNetTorch</td>
+<td>-67.358419</td>
+<td>0.006769</td>
+<td>33.816719</td>
+<td>0.006769</td>
+<td>33.816719</td>
+<td>1</td>
+<td>True</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>RandomForestMSE</td>
+<td>-68.346914</td>
+<td>0.032818</td>
+<td>1.102551</td>
+<td>0.032818</td>
+<td>1.102551</td>
+<td>1</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>ExtraTreesMSE</td>
+<td>-68.569688</td>
+<td>0.035215</td>
+<td>0.590428</td>
+<td>0.035215</td>
+<td>0.590428</td>
+<td>1</td>
+<td>True</td>
+<td>7</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>NeuralNetFastAI</td>
+<td>-72.355712</td>
+<td>0.012358</td>
+<td>7.412937</td>
+<td>0.012358</td>
+<td>7.412937</td>
+<td>1</td>
+<td>True</td>
+<td>8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>KNeighborsDist</td>
+<td>-113.647125</td>
+<td>0.008502</td>
+<td>0.069228</td>
+<td>0.008502</td>
+<td>0.069228</td>
+<td>1</td>
+<td>True</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>KNeighborsUnif</td>
+<td>-116.110797</td>
+<td>0.008447</td>
+<td>0.071381</td>
+<td>0.008447</td>
+<td>0.071381</td>
+<td>1</td>
+<td>True</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-48-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<p><img src="14wk-59.out_files/figure-html/293a019c-ddc7-4f8e-b164-94a2b0e84427-1-14wk-59_files/figure-ipynb/7eadfaa9-745b-4c54-ac64-2de7087ebba6-1-00d92eaf-27f8-4b81-b19c-1c33dea8fa18.png" class="img-fluid"></p>
+<ul>
+<li>이건 적용하지 말자.</li>
+<li>어차피 트리계열은 명목형변수를 순서형변수로 잘못 적용해도 크게 상관없음.</li>
+</ul>
+</section>
+<section id="d.-step4-y의-분포" class="level2">
+<h2 class="anchored" data-anchor-id="d.-step4-y의-분포">D. Step4 – <span class="math inline">\(y\)</span>의 분포</h2>
+<p><code>-</code> 지금까지한 피처엔지니어링</p>
+<div id="54ca5d7b-43d0-4a53-be0b-f17d8b347eee" class="cell" data-tags="[]" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train.copy()</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test.copy()</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="co">#----# </span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'casual'</span>,<span class="st">'registered'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'hour'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.hour</span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_train_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>df_test_featured[<span class="st">'weekday'</span>] <span class="op">=</span> df_test_featured[<span class="st">'datetime'</span>].<span class="bu">apply</span>(pd.to_datetime).dt.weekday</span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test_featured.drop([<span class="st">'datetime'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a><span class="co">#--#</span></span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a>df_train_featured <span class="op">=</span> df_train_featured.drop([<span class="st">'atemp'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>df_test_featured <span class="op">=</span> df_test_featured.drop([<span class="st">'atemp'</span>],axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="9bbe4f7e-d458-437f-97f2-1145ad8a337a" class="cell" data-tags="[]" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>df_train_featured[<span class="st">'count'</span>].hist() <span class="co"># 정규분포가 아니네</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="69">
+<pre><code>&lt;AxesSubplot: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-50-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="0731b448-8e80-46c7-81ac-19e2c56334ec" class="cell" data-tags="[]" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>transfomr <span class="op">=</span> sklearn.preprocessing.PowerTransformer(method<span class="op">=</span><span class="st">'box-cox'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1fa8dbf7-9b7c-4229-a691-7f556f63cdf7" class="cell" data-tags="[]" data-execution_count="71">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>count2 <span class="op">=</span> transfomr.fit_transform(df_train_featured[[<span class="st">'count'</span>]]).reshape(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>plt.hist(count2)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-52-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="c6225efd-30d3-4139-88b5-af787e94f2ff" class="cell" data-tags="[]" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>df_train_featured.assign(count <span class="op">=</span> count2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="72">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">holiday</th>
+<th data-quarto-table-cell-role="th">workingday</th>
+<th data-quarto-table-cell-role="th">weather</th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">humidity</th>
+<th data-quarto-table-cell-role="th">windspeed</th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">hour</th>
+<th data-quarto-table-cell-role="th">weekday</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>81</td>
+<td>0.0000</td>
+<td>-1.255010</td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.02</td>
+<td>80</td>
+<td>0.0000</td>
+<td>-0.801417</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.02</td>
+<td>80</td>
+<td>0.0000</td>
+<td>-0.924248</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>75</td>
+<td>0.0000</td>
+<td>-1.340805</td>
+<td>3</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>75</td>
+<td>0.0000</td>
+<td>-2.043720</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10881</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>15.58</td>
+<td>50</td>
+<td>26.0027</td>
+<td>0.928271</td>
+<td>19</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10882</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>14.76</td>
+<td>57</td>
+<td>15.0013</td>
+<td>0.576172</td>
+<td>20</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10883</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.94</td>
+<td>61</td>
+<td>15.0013</td>
+<td>0.233448</td>
+<td>21</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10884</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.94</td>
+<td>61</td>
+<td>6.0032</td>
+<td>0.006178</td>
+<td>22</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10885</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.12</td>
+<td>66</td>
+<td>8.9981</td>
+<td>-0.291061</td>
+<td>23</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+<p>10886 rows × 10 columns</p>
+</div>
+</div>
+</div>
+<p><code>-</code> 적합</p>
+<div id="ed0f10bb-79be-4330-8233-3b5b41c7158e" class="cell" data-tags="[]" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step1 -- pass </span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="co"># step2 </span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(label<span class="op">=</span><span class="st">'count'</span>,verbosity<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step3</span></span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>predictr.fit(df_train_featured.assign(count <span class="op">=</span> count2))</span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a><span class="co"># step4</span></span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> predictr.predict(df_train_featured) </span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a>yyhat <span class="op">=</span> predictr.predict(df_test_featured)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="70291f2f-a472-4fb1-b29f-e58055b34a41" class="cell" data-tags="[]" data-execution_count="74">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> transfomr.inverse_transform(yhat.to_frame()).reshape(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>yyhat <span class="op">=</span> transfomr.inverse_transform(yyhat.to_frame()).reshape(<span class="op">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="28cb4908-6eb2-4b41-a4b9-7dfdb6036f62" class="cell" data-tags="[]" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>plot(yhat,yyhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-56-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="7baf2033-319f-45f3-886e-6b5a47e04264" class="cell" data-tags="[]" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>submit(yyhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|████████████████████████████████████████| 243k/243k [00:02&lt;00:00, 96.3kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+</div>
+<p><img src="14wk-59.out_files/figure-html/d6f9bf26-1a4a-4470-9334-e5149ec505e8-1-14wk-59_files/figure-ipynb/1dbc8811-621c-45df-b334-b06b3796ff20-1-d6389738-8ec1-4a00-808e-e5e546c15222.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="hw" class="level1">
+<h1>8. HW</h1>
+<p>box-cox transform이 아닌 <code>log1p</code>변환을 취해서 결과를 구해볼 것</p>
+<p><code>-</code> y에 0값이 많으므로 log에 1더한 log1p함수를 이용하는 것임.</p>
+<div id="cb4a39da-c8e3-43ca-a094-23455ee54f5f" class="cell" data-tags="[]" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>np.log1p(<span class="fl">0.1234</span>), np.log(<span class="fl">0.1234</span><span class="op">+</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="75a88dff-42df-4541-b83e-7d4ab706fe7f" class="cell" data-tags="[]" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>np.expm1(<span class="fl">0.11635980111619529</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>결과는 아래와 같음</p>
+<p><img src="14wk-59.out_files/figure-html/b7062f92-594f-46aa-940f-74c9f51eea1e-1-14wk-59_files/figure-ipynb/515fc79e-083d-4530-baa2-12d37fddb683-1-44ac48af-bc07-4e48-9445-c50df0e447f9.png" class="img-fluid"></p>
+<div id="0d42a30b-14b8-430d-8b11-8993889a3c61" class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>count3 <span class="op">=</span> np.log1p(df_train_featured[<span class="st">'count'</span>])</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>count3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="83">
+<pre><code>0        2.833213
+1        3.713572
+2        3.496508
+3        2.639057
+4        0.693147
+           ...   
+10881    5.820083
+10882    5.488938
+10883    5.129899
+10884    4.867534
+10885    4.488636
+Name: count, Length: 10886, dtype: float64</code></pre>
+</div>
+</div>
+<div id="351b9fbf-75ec-40b6-8fdc-39852d9274ef" class="cell" data-execution_count="84">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>plt.hist(count3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="84">
+<pre><code>(array([ 237.,  462.,  625.,  626.,  805., 1076., 1768., 2544., 2058.,
+         685.]),
+ array([0.69314718, 1.31238343, 1.93161968, 2.55085593, 3.17009218,
+        3.78932843, 4.40856467, 5.02780092, 5.64703717, 6.26627342,
+        6.88550967]),
+ &lt;BarContainer object of 10 artists&gt;)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-61-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="f853f9eb-76c8-469c-a586-70e4d5140a81" class="cell" data-tags="[]" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>df_train_featured.assign(count <span class="op">=</span> count3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="85">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">season</th>
+<th data-quarto-table-cell-role="th">holiday</th>
+<th data-quarto-table-cell-role="th">workingday</th>
+<th data-quarto-table-cell-role="th">weather</th>
+<th data-quarto-table-cell-role="th">temp</th>
+<th data-quarto-table-cell-role="th">humidity</th>
+<th data-quarto-table-cell-role="th">windspeed</th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">hour</th>
+<th data-quarto-table-cell-role="th">weekday</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>81</td>
+<td>0.0000</td>
+<td>2.833213</td>
+<td>0</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.02</td>
+<td>80</td>
+<td>0.0000</td>
+<td>3.713572</td>
+<td>1</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.02</td>
+<td>80</td>
+<td>0.0000</td>
+<td>3.496508</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>75</td>
+<td>0.0000</td>
+<td>2.639057</td>
+<td>3</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>9.84</td>
+<td>75</td>
+<td>0.0000</td>
+<td>0.693147</td>
+<td>4</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10881</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>15.58</td>
+<td>50</td>
+<td>26.0027</td>
+<td>5.820083</td>
+<td>19</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10882</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>14.76</td>
+<td>57</td>
+<td>15.0013</td>
+<td>5.488938</td>
+<td>20</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10883</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.94</td>
+<td>61</td>
+<td>15.0013</td>
+<td>5.129899</td>
+<td>21</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10884</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.94</td>
+<td>61</td>
+<td>6.0032</td>
+<td>4.867534</td>
+<td>22</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10885</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>13.12</td>
+<td>66</td>
+<td>8.9981</td>
+<td>4.488636</td>
+<td>23</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+<p>10886 rows × 10 columns</p>
+</div>
+</div>
+</div>
+<p><code>-</code> 적합</p>
+<div id="f774d932-0060-498f-bf5b-9e4743fe9172" class="cell" data-tags="[]" data-execution_count="86">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step1 -- pass </span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="co"># step2 </span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(label<span class="op">=</span><span class="st">'count'</span>,verbosity<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step3</span></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>predictr.fit(df_train_featured.assign(count <span class="op">=</span> count3))</span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a><span class="co"># step4</span></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> predictr.predict(df_train_featured) </span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>yyhat <span class="op">=</span> predictr.predict(df_test_featured)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="a145532e-e7de-4d01-acf2-83457d245fe7" class="cell" data-tags="[]" data-execution_count="87">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> np.expm1(yhat)</span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>yyhat <span class="op">=</span> np.expm1(yyhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="bc0fb65d-4d48-44fa-98aa-1129f4e81235" class="cell" data-tags="[]" data-execution_count="88">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>plot(yhat,yyhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="14wk-59.out_files/figure-html/cell-65-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="f324a631-0b7e-43cc-a676-cee758d55e3e" class="cell" data-tags="[]" data-execution_count="89">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>submit(yyhat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
+100%|█████████████████████████████████████████| 242k/242k [00:02&lt;00:00, 115kB/s]
+Successfully submitted to Bike Sharing Demand</code></pre>
+</div>
+</div>
+<p><img src="14wk-59.out_files/figure-html/f3203503-b19e-4bfb-b2d8-580e998a603d-1-cc80c467-16fc-42e5-a532-ee7cac5239b4.png" class="img-fluid"></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        for (let i = 0; i < 2; i++) {
+          container.appendChild(note.children[i].cloneNode(true));
+        }
+        return container.innerHTML
+      } else {
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
