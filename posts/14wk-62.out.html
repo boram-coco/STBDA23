@@ -9,7 +9,7 @@
 <meta name="author" content="김보람">
 <meta name="dcterms.date" content="2023-12-17">
 
-<title>STBDA23 - [STBDA2023] 14wk-61: NLP with Disaster Tweets / 자료분석(Autogluon)</title>
+<title>STBDA23 - [STBDA2023] 14wk-62: NLP with Disaster Tweets (Text) / 자료분석(Autogluon)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -103,6 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -150,7 +151,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">[STBDA2023] 14wk-61: NLP with Disaster Tweets / 자료분석(Autogluon)</h1>
+      <h1 class="title">[STBDA2023] 14wk-62: NLP with Disaster Tweets (Text) / 자료분석(Autogluon)</h1>
                       </div>
   </div>
     
@@ -185,8 +186,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="wk-61-nlp-with-disaster-tweets-자료분석autogluon" class="level1">
-<h1>14wk-61: NLP with Disaster Tweets / 자료분석(Autogluon)</h1>
+<section id="wk-62-nlp-with-disaster-tweets-text-자료분석autogluon" class="level1">
+<h1>14wk-62: NLP with Disaster Tweets (Text) / 자료분석(Autogluon)</h1>
 <p>최규빈<br>
 2023-12-01</p>
 </section>
@@ -196,32 +197,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="imports" class="level1">
 <h1>2. Imports</h1>
-<div id="11f3d6e8-e7b3-453a-81a2-99b3a0cddbdb" class="cell" data-tags="[]" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install autogluon.eda</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="11f3d6e8-e7b3-453a-81a2-99b3a0cddbdb" class="cell" data-tags="[]" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!pip install autogluon.multimodal </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="b7b83a12-e79d-4be9-a6fe-8edc6f39d7a1" class="cell" data-tags="[]" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#---#</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> autogluon.tabular <span class="im">import</span> TabularPredictor</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#---#</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#---#</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> autogluon.multimodal <span class="im">import</span> MultiModalPredictor <span class="co"># from autogluon.tabular import TabularPredictor</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#---#</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="data" class="level1">
 <h1>3. Data</h1>
-<div id="89f0eb89-c429-4210-9a68-d5bac8d054b8" class="cell" data-tags="[]" data-execution_count="7">
+<div id="89f0eb89-c429-4210-9a68-d5bac8d054b8" class="cell" data-tags="[]" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions download <span class="op">-</span>c nlp<span class="op">-</span>getting<span class="op">-</span>started</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
 Downloading nlp-getting-started.zip to /home/coco/Dropbox/Class/STBDA23/posts
-100%|████████████████████████████████████████| 593k/593k [00:00&lt;00:00, 1.98MB/s]
-100%|████████████████████████████████████████| 593k/593k [00:00&lt;00:00, 1.97MB/s]</code></pre>
+100%|████████████████████████████████████████| 593k/593k [00:00&lt;00:00, 2.28MB/s]
+100%|████████████████████████████████████████| 593k/593k [00:00&lt;00:00, 2.28MB/s]</code></pre>
 </div>
 </div>
-<div id="0589d6d0-4cbf-4a6f-9448-9902f4b0f1fc" class="cell" data-tags="[]" data-execution_count="8">
+<div id="0589d6d0-4cbf-4a6f-9448-9902f4b0f1fc" class="cell" data-tags="[]" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>unzip nlp<span class="op">-</span>getting<span class="op">-</span>started.<span class="bu">zip</span> <span class="op">-</span>d data </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Archive:  nlp-getting-started.zip
@@ -230,21 +230,21 @@ Downloading nlp-getting-started.zip to /home/coco/Dropbox/Class/STBDA23/posts
   inflating: data/train.csv          </code></pre>
 </div>
 </div>
-<div id="f39229d9-0244-4b4b-895f-1556aa8abb26" class="cell" data-tags="[]" data-execution_count="9">
+<div id="f39229d9-0244-4b4b-895f-1556aa8abb26" class="cell" data-tags="[]" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.read_csv(<span class="st">'data/train.csv'</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_test <span class="op">=</span> pd.read_csv(<span class="st">'data/test.csv'</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sample_submission <span class="op">=</span> pd.read_csv(<span class="st">'data/sample_submission.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7d1f6ed1-cbaa-483e-8dbf-efb2c996c749" class="cell" data-tags="[]" data-execution_count="10">
+<div id="7d1f6ed1-cbaa-483e-8dbf-efb2c996c749" class="cell" data-tags="[]" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm <span class="op">-</span>rf data</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>rm nlp<span class="op">-</span>getting<span class="op">-</span>started.<span class="bu">zip</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="분석" class="level1">
 <h1>4. 분석</h1>
-<div id="c27765f2-6f57-4895-88aa-4954e8560cf1" class="cell" data-tags="[]" data-execution_count="11">
+<div id="c27765f2-6f57-4895-88aa-4954e8560cf1" class="cell" data-tags="[]" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
@@ -306,9 +306,9 @@ Downloading nlp-getting-started.zip to /home/coco/Dropbox/Class/STBDA23/posts
 </div>
 </div>
 </div>
-<div id="f972a6ac-2e28-4a9f-8296-f67ca3b7c7b3" class="cell" data-tags="[]" data-execution_count="12">
+<div id="f972a6ac-2e28-4a9f-8296-f67ca3b7c7b3" class="cell" data-tags="[]" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_test.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 
 
@@ -364,197 +364,225 @@ Downloading nlp-getting-started.zip to /home/coco/Dropbox/Class/STBDA23/posts
 </div>
 </div>
 </div>
-<div id="f8c242f1-ed6b-4ef5-a5b1-f271462dcafc" class="cell" data-execution_count="13">
+<div id="f8c242f1-ed6b-4ef5-a5b1-f271462dcafc" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># step1 -- pass</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># step2 </span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> TabularPredictor(label <span class="op">=</span> <span class="st">'target'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> MultiModalPredictor(label <span class="op">=</span> <span class="st">'target'</span>)</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># step3</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>predictr.fit(df_train,num_gpus<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>predictr.fit(df_train)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># step4 </span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> predictr.predict(df_test) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231217_125246/"
-Beginning AutoGluon training ...
-AutoGluon will save models to "AutogluonModels/ag-20231217_125246/"
-AutoGluon Version:  0.8.2
-Python Version:     3.8.18
-Operating System:   Linux
-Platform Machine:   x86_64
-Platform Version:   #38~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Nov  2 18:01:13 UTC 2
-Disk Space Avail:   653.05 GB / 982.82 GB (66.4%)
-Train Data Rows:    7613
-Train Data Columns: 4
-Label Column: target
-Preprocessing data ...
+<pre><code>No path specified. Models will be saved in: "AutogluonModels/ag-20231218_074742/"
 AutoGluon infers your prediction problem is: 'binary' (because only two unique label-values observed).
     2 unique label values:  [1, 0]
     If 'binary' is not the correct problem_type, please manually specify the problem_type parameter during predictor init (You may specify problem_type as one of: ['binary', 'multiclass', 'regression'])
-Selected class &lt;--&gt; label mapping:  class 1 = 1, class 0 = 0
-Using Feature Generators to preprocess the data ...
-Fitting AutoMLPipelineFeatureGenerator...
-    Available Memory:                    121393.46 MB
-    Train Data (Original)  Memory Usage: 2.2 MB (0.0% of available memory)
-    Inferring data type of each feature based on column values. Set feature_metadata_in to manually specify special dtypes of the features.
-    Stage 1 Generators:
-        Fitting AsTypeFeatureGenerator...
-    Stage 2 Generators:
-        Fitting FillNaFeatureGenerator...
-    Stage 3 Generators:
-        Fitting IdentityFeatureGenerator...
-        Fitting CategoryFeatureGenerator...
-            Fitting CategoryMemoryMinimizeFeatureGenerator...
-        Fitting TextSpecialFeatureGenerator...
-            Fitting BinnedFeatureGenerator...
-            Fitting DropDuplicatesFeatureGenerator...
-        Fitting TextNgramFeatureGenerator...
-            Fitting CountVectorizer for text features: ['text']
-            CountVectorizer fit with vocabulary size = 641
-    Stage 4 Generators:
-        Fitting DropUniqueFeatureGenerator...
-    Stage 5 Generators:
-        Fitting DropDuplicatesFeatureGenerator...
-    Types of features in original data (raw dtype, special dtypes):
-        ('int', [])          : 1 | ['id']
-        ('object', [])       : 2 | ['keyword', 'location']
-        ('object', ['text']) : 1 | ['text']
-    Types of features in processed data (raw dtype, special dtypes):
-        ('category', [])                    :   2 | ['keyword', 'location']
-        ('category', ['text_as_category'])  :   1 | ['text']
-        ('int', [])                         :   1 | ['id']
-        ('int', ['binned', 'text_special']) :  28 | ['text.char_count', 'text.word_count', 'text.capital_ratio', 'text.lower_ratio', 'text.digit_ratio', ...]
-        ('int', ['text_ngram'])             : 631 | ['__nlp__.05', '__nlp__.08', '__nlp__.10', '__nlp__.11', '__nlp__.15', ...]
-    3.0s = Fit runtime
-    4 features in original data used to generate 663 features in processed data.
-    Train Data (Processed) Memory Usage: 9.92 MB (0.0% of available memory)
-Data preprocessing and feature engineering runtime = 3.02s ...
-AutoGluon will gauge predictive performance using evaluation metric: 'accuracy'
-    To change this, specify the eval_metric parameter of Predictor()
-Automatically generating train/validation split with holdout_frac=0.1, Train Rows: 6851, Val Rows: 762
-User-specified model hyperparameters to be fit:
-{
-    'NN_TORCH': {},
-    'GBM': [{'extra_trees': True, 'ag_args': {'name_suffix': 'XT'}}, {}, 'GBMLarge'],
-    'CAT': {},
-    'XGB': {},
-    'FASTAI': {},
-    'RF': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
-    'XT': [{'criterion': 'gini', 'ag_args': {'name_suffix': 'Gini', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'entropy', 'ag_args': {'name_suffix': 'Entr', 'problem_types': ['binary', 'multiclass']}}, {'criterion': 'squared_error', 'ag_args': {'name_suffix': 'MSE', 'problem_types': ['regression', 'quantile']}}],
-    'KNN': [{'weights': 'uniform', 'ag_args': {'name_suffix': 'Unif'}}, {'weights': 'distance', 'ag_args': {'name_suffix': 'Dist'}}],
-}
-Fitting 13 L1 models ...
-Fitting model: KNeighborsUnif ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-Exception ignored on calling ctypes callback function: &lt;function _ThreadpoolInfo._find_modules_with_dl_iterate_phdr.&lt;locals&gt;.match_module_callback at 0x7f472771f8b0&gt;
-Traceback (most recent call last):
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 400, in match_module_callback
-    self._make_module_from_path(filepath)
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 515, in _make_module_from_path
-    module = module_class(filepath, prefix, user_api, internal_api)
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 606, in __init__
-    self.version = self.get_version()
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 646, in get_version
-    config = get_config().split()
-AttributeError: 'NoneType' object has no attribute 'split'
-    0.7283   = Validation score   (accuracy)
-    0.77s    = Training   runtime
-    0.12s    = Validation runtime
-Fitting model: KNeighborsDist ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-Exception ignored on calling ctypes callback function: &lt;function _ThreadpoolInfo._find_modules_with_dl_iterate_phdr.&lt;locals&gt;.match_module_callback at 0x7f471ea9d1f0&gt;
-Traceback (most recent call last):
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 400, in match_module_callback
-    self._make_module_from_path(filepath)
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 515, in _make_module_from_path
-    module = module_class(filepath, prefix, user_api, internal_api)
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 606, in __init__
-    self.version = self.get_version()
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 646, in get_version
-    config = get_config().split()
-AttributeError: 'NoneType' object has no attribute 'split'
-    0.7402   = Validation score   (accuracy)
-    0.1s     = Training   runtime
-    0.07s    = Validation runtime
-Fitting model: LightGBMXT ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.7953   = Validation score   (accuracy)
-    0.55s    = Training   runtime
-    0.01s    = Validation runtime
-Fitting model: LightGBM ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.7992   = Validation score   (accuracy)
-    0.66s    = Training   runtime
-    0.01s    = Validation runtime
-Fitting model: RandomForestGini ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.7808   = Validation score   (accuracy)
-    0.63s    = Training   runtime
-    0.04s    = Validation runtime
-Fitting model: RandomForestEntr ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.7703   = Validation score   (accuracy)
-    0.65s    = Training   runtime
-    0.03s    = Validation runtime
-Fitting model: CatBoost ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.8058   = Validation score   (accuracy)
-    1.89s    = Training   runtime
-    0.02s    = Validation runtime
-Fitting model: ExtraTreesGini ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.7874   = Validation score   (accuracy)
-    0.65s    = Training   runtime
-    0.04s    = Validation runtime
-Fitting model: ExtraTreesEntr ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.7835   = Validation score   (accuracy)
-    0.64s    = Training   runtime
-    0.04s    = Validation runtime
-Fitting model: NeuralNetFastAI ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-No improvement since epoch 2: early stopping
-    0.7808   = Validation score   (accuracy)
-    3.18s    = Training   runtime
-    0.01s    = Validation runtime
-Fitting model: XGBoost ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.7953   = Validation score   (accuracy)
-    0.97s    = Training   runtime
-    0.01s    = Validation runtime
-Fitting model: NeuralNetTorch ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.727    = Validation score   (accuracy)
-    6.51s    = Training   runtime
-    0.01s    = Validation runtime
-Fitting model: LightGBMLarge ...
-Specified total num_gpus: 1, but only 0 are available. Will use 0 instead
-    0.8071   = Validation score   (accuracy)
-    2.27s    = Training   runtime
-    0.01s    = Validation runtime
-Fitting model: WeightedEnsemble_L2 ...
-    0.8268   = Validation score   (accuracy)
-    0.46s    = Training   runtime
-    0.0s     = Validation runtime
-AutoGluon training complete, total runtime = 24.02s ... Best model: "WeightedEnsemble_L2"
-TabularPredictor saved. To load, use: predictor = TabularPredictor.load("AutogluonModels/ag-20231217_125246/")
-Exception ignored on calling ctypes callback function: &lt;function _ThreadpoolInfo._find_modules_with_dl_iterate_phdr.&lt;locals&gt;.match_module_callback at 0x7f471e9b2e50&gt;
-Traceback (most recent call last):
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 400, in match_module_callback
-    self._make_module_from_path(filepath)
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 515, in _make_module_from_path
-    module = module_class(filepath, prefix, user_api, internal_api)
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 606, in __init__
-    self.version = self.get_version()
-  File "/home/coco/anaconda3/envs/py38/lib/python3.8/site-packages/threadpoolctl.py", line 646, in get_version
-    config = get_config().split()
-AttributeError: 'NoneType' object has no attribute 'split'</code></pre>
+Global seed set to 0
+AutoMM starts to create your model. ✨
+
+- AutoGluon version is 0.8.2.
+
+- Pytorch version is 1.13.1+cu117.
+
+- Model will be saved to "/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742".
+
+- Validation metric is "roc_auc".
+
+- To track the learning progress, you can open a terminal and launch Tensorboard:
+    ```shell
+    # Assume you have installed tensorboard
+    tensorboard --logdir /home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742
+    ```
+
+Enjoy your coffee, and let AutoMM do the job ☕☕☕ Learn more at https://auto.gluon.ai
+
+0 GPUs are detected, and 0 GPUs will be used.
+
+GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+
+  | Name              | Type                | Params
+----------------------------------------------------------
+0 | model             | MultimodalFusionMLP | 109 M 
+1 | validation_metric | BinaryAUROC         | 0     
+2 | loss_func         | CrossEntropyLoss    | 0     
+----------------------------------------------------------
+109 M     Trainable params
+0         Non-trainable params
+109 M     Total params
+439.134   Total estimated model params size (MB)
+Epoch 0, global step 26: 'val_roc_auc' reached 0.81472 (best 0.81472), saving model to '/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742/epoch=0-step=26.ckpt' as top 3
+Epoch 0, global step 53: 'val_roc_auc' reached 0.87681 (best 0.87681), saving model to '/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742/epoch=0-step=53.ckpt' as top 3
+Epoch 1, global step 80: 'val_roc_auc' reached 0.87866 (best 0.87866), saving model to '/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742/epoch=1-step=80.ckpt' as top 3
+Epoch 1, global step 107: 'val_roc_auc' reached 0.89115 (best 0.89115), saving model to '/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742/epoch=1-step=107.ckpt' as top 3
+Epoch 2, global step 134: 'val_roc_auc' reached 0.88618 (best 0.89115), saving model to '/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742/epoch=2-step=134.ckpt' as top 3
+Epoch 2, global step 161: 'val_roc_auc' reached 0.88654 (best 0.89115), saving model to '/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742/epoch=2-step=161.ckpt' as top 3
+Epoch 3, global step 188: 'val_roc_auc' reached 0.89034 (best 0.89115), saving model to '/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742/epoch=3-step=188.ckpt' as top 3
+Epoch 3, global step 215: 'val_roc_auc' was not in top 3
+Epoch 4, global step 242: 'val_roc_auc' was not in top 3
+Epoch 4, global step 269: 'val_roc_auc' reached 0.89090 (best 0.89115), saving model to '/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742/epoch=4-step=269.ckpt' as top 3
+Epoch 5, global step 296: 'val_roc_auc' was not in top 3
+Epoch 5, global step 323: 'val_roc_auc' was not in top 3
+Epoch 6, global step 350: 'val_roc_auc' was not in top 3
+Epoch 6, global step 377: 'val_roc_auc' was not in top 3
+Start to fuse 3 checkpoints via the greedy soup algorithm.
+AutoMM has created your model 🎉🎉🎉
+
+- To load the model, use the code below:
+    ```python
+    from autogluon.multimodal import MultiModalPredictor
+    predictor = MultiModalPredictor.load("/home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742")
+    ```
+
+- You can open a terminal and launch Tensorboard to visualize the training log:
+    ```shell
+    # Assume you have installed tensorboard
+    tensorboard --logdir /home/coco/Dropbox/Class/STBDA23/posts/AutogluonModels/ag-20231218_074742
+    ```
+
+- If you are not satisfied with the model, try to increase the training time, 
+adjust the hyperparameters (https://auto.gluon.ai/stable/tutorials/multimodal/advanced_topics/customization.html),
+or post issues on GitHub: https://github.com/autogluon/autogluon
+
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"07e6c0fd52924753b33ad7018f7e35d9","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"d755737a7f214161a8d3a1090e12a01d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"60af983b7ea944368c42a9a827d7879e","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f71b7228d742452ebdf2826b10cdffab","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f327ab6b6e84443cbd03021d5c5a9cab","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"75ad825e6d5b4398ab0b063432edd4fc","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"71d4b580a092477c9cdf8130e2df8747","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"d8cc33fb97ce46a4b35403507df076af","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"9c4840370d7f495aa828137bc168cac9","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f80e5600a28e469bbb210d6a4980b55d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
 </div>
 </div>
+<ul>
+<li>오래 걸리넹..</li>
+</ul>
 </section>
 <section id="제출" class="level1">
 <h1>5. 제출</h1>
-<div id="ca1eb571-3c6f-4611-95b9-a25e773962b9" class="cell" data-tags="[]" data-execution_count="14">
+<div id="ca1eb571-3c6f-4611-95b9-a25e773962b9" class="cell" data-tags="[]" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sample_submission</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
 
@@ -629,26 +657,26 @@ AttributeError: 'NoneType' object has no attribute 'split'</code></pre>
 </div>
 </div>
 </div>
-<div id="62c02867-9044-478b-8afe-bc3557af635e" class="cell" data-tags="[]" data-execution_count="15">
+<div id="62c02867-9044-478b-8afe-bc3557af635e" class="cell" data-tags="[]" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sample_submission[<span class="st">'target'</span>] <span class="op">=</span> yhat </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>sample_submission.to_csv(<span class="st">"submission.csv"</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="6d4455f3-9ddb-4d3e-afad-fce8e9ee81d0" class="cell" data-tags="[]" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions submit <span class="op">-</span>c nlp<span class="op">-</span>getting<span class="op">-</span>started <span class="op">-</span>f submission.csv <span class="op">-</span>m <span class="st">"오토글루온, TabularPredictor"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6d4455f3-9ddb-4d3e-afad-fce8e9ee81d0" class="cell" data-tags="[]" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>kaggle competitions submit <span class="op">-</span>c nlp<span class="op">-</span>getting<span class="op">-</span>started <span class="op">-</span>f submission.csv <span class="op">-</span>m <span class="st">"오토글루온, MultiModalPredictor"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Warning: Your Kaggle API key is readable by other users on this system! To fix this, you can run 'chmod 600 /home/coco/.kaggle/kaggle.json'
-100%|██████████████████████████████████████| 22.2k/22.2k [00:01&lt;00:00, 11.8kB/s]
+100%|██████████████████████████████████████| 22.2k/22.2k [00:01&lt;00:00, 12.2kB/s]
 Successfully submitted to Natural Language Processing with Disaster Tweets</code></pre>
 </div>
 </div>
-<p><img src="14wk-61.out_files/figure-html/18f6c793-2bc0-4ff6-ba83-77eb5d8a2a39-1-14wk-61_files/figure-ipynb/4226abd1-a58f-4e5d-af3f-a82ff87a8023-1-c69244fc-e941-48a8-bbff-5dfbdf134bf2.png" class="img-fluid"></p>
-<div id="eb92711f-b53b-4c34-b06a-1bc9ca70b97d" class="cell" data-tags="[]" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">761</span><span class="op">/</span><span class="dv">1094</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
-<pre><code>0.6956124314442413</code></pre>
+<p><img src="14wk-62.out_files/figure-html/08aa45ef-a1d4-4558-9030-da4f09af00e0-1-14wk-62_files/figure-ipynb/52d432c3-40ac-4ee3-9494-20fe083919a1-1-c5e7639f-15c4-42ac-a848-6d5b58b7e291.png" class="img-fluid"></p>
+<div id="eb92711f-b53b-4c34-b06a-1bc9ca70b97d" class="cell" data-tags="[]" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dv">250</span><span class="op">/</span><span class="dv">1094</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>0.22851919561243145</code></pre>
 </div>
 </div>
-<p>별로네..</p>
+<p>이정도가 합리적임</p>
 
 
 </section>
