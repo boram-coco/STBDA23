@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.283">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="김보람">
+<meta name="dcterms.date" content="2023-12-22">
+
+<title>STBDA23 - [STBDA2023] 15wk: fin 고민의 흔적들_함수돌리기</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">STBDA23</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">[STBDA2023] 15wk: fin 고민의 흔적들_함수돌리기</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>김보람 </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 22, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="wk-fin" class="level1">
+<h1>15wk-fin</h1>
+<p>최규빈<br>
+2023-12-21</p>
+<div id="44480aa4-3ca8-45e2-b06e-5ef693ffdcac" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.animation</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> IPython</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.tree</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#---#</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="7c1e144d-9488-45db-aea5-bb5bf7f4693e" class="cell" data-tags="[]" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn.metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="1">
+<li>의사결정나무의 수동구현은 위에서 제시된 모듈 (numpy, pandas, sklearn.metrics, matplotlib, seaborn) 만을 사용해야하며 이외의 모듈을 사용할 경우 0점 처리함.</li>
+<li>True/False를 판단하는 문제는 답만 써도 무방함. (이유를 써도 상관없음)</li>
+<li>Treu/False의 판단 문제는 모두 맞출 경우만 정답으로 인정함. 다만 틀린이유가 사소하다고 판단할경우 감점없이 만점처리함.</li>
+</ol>
+</section>
+<section id="의사결정나무의-수동구현-70점" class="level1">
+<h1>1. 의사결정나무의 수동구현 (70점)</h1>
+<div id="c487030d-5f91-4ff0-92d5-791961eaf3fd" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_train <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/guebin/MP2023/master/posts/height_train.csv'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">weight</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">height</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>NaN</td>
+<td>male</td>
+<td>164.227738</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>NaN</td>
+<td>male</td>
+<td>165.798660</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>75.219015</td>
+<td>male</td>
+<td>165.528672</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>NaN</td>
+<td>male</td>
+<td>163.706442</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>81.476750</td>
+<td>male</td>
+<td>165.501403</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">275</td>
+<td>49.308558</td>
+<td>female</td>
+<td>148.587771</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">276</td>
+<td>NaN</td>
+<td>male</td>
+<td>164.822474</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">277</td>
+<td>NaN</td>
+<td>male</td>
+<td>163.907671</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">278</td>
+<td>NaN</td>
+<td>male</td>
+<td>161.674476</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">279</td>
+<td>53.714772</td>
+<td>female</td>
+<td>146.775975</td>
+</tr>
+</tbody>
+</table>
+
+<p>280 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div id="21f4555c-0063-43d9-ae89-d7ab1ac5f10b" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sns.lineplot(df_train, x <span class="op">=</span> df_train[<span class="st">'weight'</span>], y <span class="op">=</span> df_train[<span class="st">'height'</span>], hue<span class="op">=</span>df_train[<span class="st">'sex'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>&lt;AxesSubplot: xlabel='weight', ylabel='height'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="15wk-fin.out-Copy1_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="8e64d95c-9fab-496d-a298-e8b8b55b5c5e" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_train[<span class="st">'weight'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>56.580501947309074</code></pre>
+</div>
+</div>
+<p><code>(1)</code> <code>df_train</code>에서 “sex”,“weight”를 설명변수로 “height”을 반응변수로 설정하라. 결측치가 있을 경우 결측값에 일괄적으로 -99로 채워넣어라.</p>
+<p><strong>힌트</strong>: 결측치를 처리하기 위해 아래의 코드를 관찰하라.</p>
+<div id="c8592e77-fc5d-443b-9318-2f2ca9f1951b" class="cell" data-tags="[]" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_toy <span class="op">=</span> pd.DataFrame({<span class="st">'X'</span>:[<span class="dv">1</span>,<span class="dv">2</span>,np.nan,np.nan,<span class="dv">5</span>],<span class="st">'y'</span>:[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">2</span>]})</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df_toy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">X</th>
+<th data-quarto-table-cell-role="th">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.0</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2.0</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>NaN</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>NaN</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5.0</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="3dcce341-83e6-4ff4-9a2c-deeefe99a016" class="cell" data-tags="[]" data-execution_count="91">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_toy.fillna(<span class="op">-</span><span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="91">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">X</th>
+<th data-quarto-table-cell-role="th">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.0</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2.0</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>-99.0</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>-99.0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5.0</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="a11345fd-76a0-4625-a4cd-c97c1fe09a5a" class="cell" data-execution_count="92">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_tr <span class="op">=</span> df_train.copy()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df_tr.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 280 entries, 0 to 279
+Data columns (total 3 columns):
+ #   Column  Non-Null Count  Dtype  
+---  ------  --------------  -----  
+ 0   weight  151 non-null    float64
+ 1   sex     280 non-null    object 
+ 2   height  280 non-null    float64
+dtypes: float64(2), object(1)
+memory usage: 6.7+ KB</code></pre>
+</div>
+</div>
+<div id="84e1509c-7887-4e27-a6f7-ca6215e4be7a" class="cell" data-execution_count="93">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df_train[df_train[<span class="st">'sex'</span>].isin([<span class="st">'female'</span>, <span class="st">'male'</span>]) <span class="op">&amp;</span> df_train[<span class="st">'weight'</span>].isna()].groupby(<span class="st">'sex'</span>).size()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="93">
+<pre><code>sex
+male    129
+dtype: int64</code></pre>
+</div>
+</div>
+<ul>
+<li>weight에 129개의 결측치가 있고, 다 남자!!</li>
+</ul>
+<div id="00aa7037-355b-4bbe-9b21-71ef64d88bd5" class="cell" data-execution_count="94">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_tr <span class="op">=</span> df_tr.fillna(<span class="op">-</span><span class="dv">99</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df_tr.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 280 entries, 0 to 279
+Data columns (total 3 columns):
+ #   Column  Non-Null Count  Dtype  
+---  ------  --------------  -----  
+ 0   weight  280 non-null    float64
+ 1   sex     280 non-null    object 
+ 2   height  280 non-null    float64
+dtypes: float64(2), object(1)
+memory usage: 6.7+ KB</code></pre>
+</div>
+</div>
+<div id="ca3b3026-6339-4e0c-9450-0c84e8b31cfb" class="cell" data-execution_count="95">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_tr[[<span class="st">'sex'</span>,<span class="st">'weight'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c4169f07-32ef-4349-ae4a-11240737d4b3" class="cell" data-execution_count="96">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_tr[<span class="st">'height'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e625e251-6a3d-48a5-b78f-917f4b1846c8" class="cell" data-execution_count="97">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>X.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="97">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">weight</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>male</td>
+<td>-99.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>male</td>
+<td>-99.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>male</td>
+<td>75.219015</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>male</td>
+<td>-99.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>male</td>
+<td>81.476750</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="dd222ac4-58b6-42c0-ba1a-4618e66e0905" class="cell" data-execution_count="98">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>y.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="98">
+<pre><code>0    164.227738
+1    165.798660
+2    165.528672
+3    163.706442
+4    165.501403
+Name: height, dtype: float64</code></pre>
+</div>
+</div>
+<p><code>(2)</code> <code>height</code>열의 평균으로 <code>height</code>의 값을 추정하라. 추정값을 <code>yhat</code>에 저장하라. <code>sklearn.metrics.r2_score()</code>을 이용하여 <code>r2_score</code>를 계산하라.</p>
+<p><strong>hint:</strong> 0이 나와야 한다.</p>
+<div id="00cb08c8-8d2f-4bd9-8598-291b81907bcb" class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>yhat <span class="op">=</span> ([y.mean()] <span class="op">*</span> <span class="bu">len</span>(y))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>r2_score <span class="op">=</span> sklearn.metrics.r2_score(y,yhat)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>r2_score</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="99">
+<pre><code>0.0</code></pre>
+</div>
+</div>
+<p><code>(3)</code> 아래를 계산하라.</p>
+<ul>
+<li><code>r</code> = <code>y</code> - <code>yhat</code></li>
+</ul>
+<p>여기에서 <code>yhat</code>은 <code>(2)</code>의 결과로 얻어진 적합값을 의미한다. 이제 <code>r</code>에 Weight를 기준으로 의사결정나무를 적용하여 아래와 같은 분할을 만들어라.</p>
+<ul>
+<li><code>X['weight']</code> &lt; <code>c</code></li>
+<li><code>X['weight']</code> &gt;= <code>c</code></li>
+</ul>
+<p><code>sklearn.metrics.r2_score()</code>를 이용하여 최적의 <span class="math inline">\(c\)</span>값을 구하여라.</p>
+<p><strong>참고</strong></p>
+<p>아래의 구간을 적당히 등분하여 구할 것. 너무 세밀하게 등분하지 않아도 무방함.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>(X[<span class="st">'weight'</span>].<span class="bu">min</span>(), X[<span class="st">'weight'</span>].<span class="bu">max</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d612187b-5b70-4b97-94a3-8815628bcedc" class="cell" data-execution_count="100">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> y <span class="op">-</span> yhat</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="100">
+<pre><code>0       6.241209
+1       7.812131
+2       7.542143
+3       5.719914
+4       7.514874
+         ...    
+275    -9.398757
+276     6.835946
+277     5.921143
+278     3.687948
+279   -11.210554
+Name: height, Length: 280, dtype: float64</code></pre>
+</div>
+</div>
+<p><code>-</code> 결측값 고려 안했을 때</p>
+<div id="fc006531-cba5-4ae7-ad74-7e8c983f288b" class="cell" data-execution_count="101">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_predict(X,y,c):</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> np.array(X[<span class="st">'weight'</span>]).reshape(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> np.array(y) </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    yhat <span class="op">=</span> y<span class="op">*</span><span class="dv">0</span>   </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    yhat[X<span class="op">&lt;</span>c] <span class="op">=</span> y[X<span class="op">&lt;</span>c].mean()</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    yhat[X<span class="op">&gt;=</span>c] <span class="op">=</span> y[X<span class="op">&gt;=</span>c].mean()</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> yhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="35fd0b13-dcc3-4709-af9e-4bcf69a659d0" class="cell" data-execution_count="102">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>cuts <span class="op">=</span> np.arange(X[<span class="st">'weight'</span>].<span class="bu">min</span>(), X[<span class="st">'weight'</span>].<span class="bu">max</span>(), <span class="fl">0.5</span>).<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> np.array([sklearn.metrics.r2_score(y,fit_predict(X,y,c)) <span class="cf">for</span> c <span class="kw">in</span> cuts])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="26cdf74b-db61-48f9-9f51-c11179194d2c" class="cell" data-execution_count="103">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame({<span class="st">'cut'</span>:cuts,<span class="st">'score'</span>:score})<span class="op">\</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>.plot.line(x<span class="op">=</span><span class="st">'cut'</span>,y<span class="op">=</span><span class="st">'score'</span>,backend<span class="op">=</span><span class="st">'plotly'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>                            <div id="646f90a8-b12b-48e5-a599-44e5d04cf000" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("646f90a8-b12b-48e5-a599-44e5d04cf000")) {                    Plotly.newPlot(                        "646f90a8-b12b-48e5-a599-44e5d04cf000",                        [{"hovertemplate":"cut=%{x}<br>score=%{y}<extra></extra>","legendgroup":"","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"","orientation":"v","showlegend":false,"x":[-99.0,-98.5,-98.0,-97.5,-97.0,-96.5,-96.0,-95.5,-95.0,-94.5,-94.0,-93.5,-93.0,-92.5,-92.0,-91.5,-91.0,-90.5,-90.0,-89.5,-89.0,-88.5,-88.0,-87.5,-87.0,-86.5,-86.0,-85.5,-85.0,-84.5,-84.0,-83.5,-83.0,-82.5,-82.0,-81.5,-81.0,-80.5,-80.0,-79.5,-79.0,-78.5,-78.0,-77.5,-77.0,-76.5,-76.0,-75.5,-75.0,-74.5,-74.0,-73.5,-73.0,-72.5,-72.0,-71.5,-71.0,-70.5,-70.0,-69.5,-69.0,-68.5,-68.0,-67.5,-67.0,-66.5,-66.0,-65.5,-65.0,-64.5,-64.0,-63.5,-63.0,-62.5,-62.0,-61.5,-61.0,-60.5,-60.0,-59.5,-59.0,-58.5,-58.0,-57.5,-57.0,-56.5,-56.0,-55.5,-55.0,-54.5,-54.0,-53.5,-53.0,-52.5,-52.0,-51.5,-51.0,-50.5,-50.0,-49.5,-49.0,-48.5,-48.0,-47.5,-47.0,-46.5,-46.0,-45.5,-45.0,-44.5,-44.0,-43.5,-43.0,-42.5,-42.0,-41.5,-41.0,-40.5,-40.0,-39.5,-39.0,-38.5,-38.0,-37.5,-37.0,-36.5,-36.0,-35.5,-35.0,-34.5,-34.0,-33.5,-33.0,-32.5,-32.0,-31.5,-31.0,-30.5,-30.0,-29.5,-29.0,-28.5,-28.0,-27.5,-27.0,-26.5,-26.0,-25.5,-25.0,-24.5,-24.0,-23.5,-23.0,-22.5,-22.0,-21.5,-21.0,-20.5,-20.0,-19.5,-19.0,-18.5,-18.0,-17.5,-17.0,-16.5,-16.0,-15.5,-15.0,-14.5,-14.0,-13.5,-13.0,-12.5,-12.0,-11.5,-11.0,-10.5,-10.0,-9.5,-9.0,-8.5,-8.0,-7.5,-7.0,-6.5,-6.0,-5.5,-5.0,-4.5,-4.0,-3.5,-3.0,-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0,4.5,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10.0,10.5,11.0,11.5,12.0,12.5,13.0,13.5,14.0,14.5,15.0,15.5,16.0,16.5,17.0,17.5,18.0,18.5,19.0,19.5,20.0,20.5,21.0,21.5,22.0,22.5,23.0,23.5,24.0,24.5,25.0,25.5,26.0,26.5,27.0,27.5,28.0,28.5,29.0,29.5,30.0,30.5,31.0,31.5,32.0,32.5,33.0,33.5,34.0,34.5,35.0,35.5,36.0,36.5,37.0,37.5,38.0,38.5,39.0,39.5,40.0,40.5,41.0,41.5,42.0,42.5,43.0,43.5,44.0,44.5,45.0,45.5,46.0,46.5,47.0,47.5,48.0,48.5,49.0,49.5,50.0,50.5,51.0,51.5,52.0,52.5,53.0,53.5,54.0,54.5,55.0,55.5,56.0,56.5,57.0,57.5,58.0,58.5,59.0,59.5,60.0,60.5,61.0,61.5,62.0,62.5,63.0,63.5,64.0,64.5,65.0,65.5,66.0,66.5,67.0,67.5,68.0,68.5,69.0,69.5,70.0,70.5,71.0,71.5,72.0,72.5,73.0,73.5,74.0,74.5,75.0,75.5,76.0,76.5,77.0,77.5,78.0,78.5,79.0,79.5,80.0,80.5,81.0],"xaxis":"x","y":[0.0,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5320524394291483,0.5173162561085367,0.5173162561085367,0.5003215343076759,0.4861672299206595,0.4861672299206595,0.4275094460834957,0.36281331612538614,0.29331629445351803,0.2730056584878844,0.1955572837456292,0.13721660957363513,0.11746005565371143,0.04916354367857534,0.030115336903621004,0.008048847364217626,0.0012562058815517307,0.0007569159902826028,0.008725754416583076,0.020875515148899293,0.033134537374469475,0.05751862954481157,0.07997816092042309,0.09324017935387818,0.09324017935387818,0.1007518036947731,0.1007518036947731,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11161207566476505,0.11047578030389027,0.10789887293856004,0.10789887293856004,0.10252600987013016,0.09889528268587522,0.08927791905191196,0.08072444527260125,0.08017395236281566,0.07100089721824654,0.0678181537113014,0.056749871547394415,0.0515792716024146,0.042954192733372976,0.027173066533382584,0.023908381419682767,0.023908381419682767,0.014347120796655899,0.014347120796655899,0.010516991669186293,0.006703493647162384,0.0026714777286663827],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"cut"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"score"}},"legend":{"tracegroupgap":0},"margin":{"t":60}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('646f90a8-b12b-48e5-a599-44e5d04cf000');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+</div>
+</div>
+<p>c = 43일 때 score값이 크다, 결측값(-99)의 영향을 많이 받는다.</p>
+<div id="61544867-0ae3-4f81-83a7-0e6c8e41b600" class="cell" data-execution_count="111">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array(df_tr[[<span class="st">'weight'</span>]])</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> r</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.tree.DecisionTreeRegressor(max_depth<span class="op">=</span><span class="dv">2</span>) </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,r) </span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co"># predictr.predict(X) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="111">
+<style>#sk-container-id-10 {color: black;background-color: white;}#sk-container-id-10 pre{padding: 0;}#sk-container-id-10 div.sk-toggleable {background-color: white;}#sk-container-id-10 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-10 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-10 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-10 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-10 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-10 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-10 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-10 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-10 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-10 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-10 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-10 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-10 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-10 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-10 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-10 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-10 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-10 div.sk-item {position: relative;z-index: 1;}#sk-container-id-10 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-10 div.sk-item::before, #sk-container-id-10 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-10 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-10 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-10 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-10 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-10 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-10 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-10 div.sk-label-container {text-align: center;}#sk-container-id-10 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-10 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-10" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>DecisionTreeRegressor(max_depth=2)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-10" type="checkbox" checked=""><label for="sk-estimator-id-10" class="sk-toggleable__label sk-toggleable__label-arrow">DecisionTreeRegressor</label><div class="sk-toggleable__content"><pre>DecisionTreeRegressor(max_depth=2)</pre></div></div></div></div></div>
+</div>
+</div>
+<div id="db18d490-2125-4832-bc69-63c3251bb9af" class="cell" data-execution_count="113">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(predictr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="113">
+<pre><code>[Text(0.4, 0.8333333333333334, 'x[0] &lt;= -27.858\nsquared_error = 75.768\nsamples = 280\nvalue = 0.0'),
+ Text(0.2, 0.5, 'squared_error = 2.195\nsamples = 129\nvalue = 6.869'),
+ Text(0.6, 0.5, 'x[0] &lt;= 63.609\nsquared_error = 63.87\nsamples = 151\nvalue = -5.869'),
+ Text(0.4, 0.16666666666666666, 'squared_error = 3.374\nsamples = 111\nvalue = -10.55'),
+ Text(0.8, 0.16666666666666666, 'squared_error = 2.139\nsamples = 40\nvalue = 7.123')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="15wk-fin.out-Copy1_files/figure-html/cell-22-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="d2108b6b-f281-4e12-82e8-b439f5d19b9f" class="cell" data-execution_count="120">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>dftr2 <span class="op">=</span> df_tr[df_tr[<span class="st">'weight'</span>]<span class="op">&gt;-</span><span class="fl">27.858</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d23fe253-8cb2-4d78-856b-b2424c0ab44e" class="cell" data-execution_count="124">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.get_dummies(dftr2[[<span class="st">'weight'</span>,<span class="st">'sex'</span>]])</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> np.array(dftr2[<span class="st">'r'</span>])</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.tree.DecisionTreeRegressor(max_depth<span class="op">=</span><span class="dv">1</span>) </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,r) </span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co"># predictr.predict(X) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="124">
+<style>#sk-container-id-11 {color: black;background-color: white;}#sk-container-id-11 pre{padding: 0;}#sk-container-id-11 div.sk-toggleable {background-color: white;}#sk-container-id-11 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-11 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-11 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-11 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-11 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-11 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-11 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-11 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-11 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-11 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-11 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-11 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-11 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-11 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-11 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-11 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-11 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-11 div.sk-item {position: relative;z-index: 1;}#sk-container-id-11 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-11 div.sk-item::before, #sk-container-id-11 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-11 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-11 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-11 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-11 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-11 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-11 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-11 div.sk-label-container {text-align: center;}#sk-container-id-11 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-11 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-11" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>DecisionTreeRegressor(max_depth=1)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-11" type="checkbox" checked=""><label for="sk-estimator-id-11" class="sk-toggleable__label sk-toggleable__label-arrow">DecisionTreeRegressor</label><div class="sk-toggleable__content"><pre>DecisionTreeRegressor(max_depth=1)</pre></div></div></div></div></div>
+</div>
+</div>
+<div id="a499b4fb-2b5a-4429-a0f8-58d5531322c8" class="cell" data-execution_count="125">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(predictr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="125">
+<pre><code>[Text(0.5, 0.75, 'x[2] &lt;= 0.5\nsquared_error = 63.87\nsamples = 151\nvalue = -5.869'),
+ Text(0.25, 0.25, 'squared_error = 3.374\nsamples = 111\nvalue = -10.55'),
+ Text(0.75, 0.25, 'squared_error = 2.139\nsamples = 40\nvalue = 7.123')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="15wk-fin.out-Copy1_files/figure-html/cell-25-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>똑같네..</p>
+<section id="weight-set-depth2" class="level4">
+<h4 class="anchored" data-anchor-id="weight-set-depth2">weight, set depth=2</h4>
+<div id="62bfcfe7-b8dc-4840-8f54-4fdb089f46cb" class="cell" data-execution_count="127">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.get_dummies(df_tr[[<span class="st">'weight'</span>,<span class="st">'sex'</span>]])</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> y</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.tree.DecisionTreeRegressor(max_depth<span class="op">=</span><span class="dv">2</span>, splitter<span class="op">=</span><span class="st">"best"</span>) </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y) </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co"># predictr.predict(X) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="127">
+<style>#sk-container-id-12 {color: black;background-color: white;}#sk-container-id-12 pre{padding: 0;}#sk-container-id-12 div.sk-toggleable {background-color: white;}#sk-container-id-12 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-12 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-12 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-12 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-12 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-12 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-12 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-12 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-12 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-12 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-12 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-12 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-12 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-12 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-12 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-12 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-12 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-12 div.sk-item {position: relative;z-index: 1;}#sk-container-id-12 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-12 div.sk-item::before, #sk-container-id-12 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-12 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-12 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-12 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-12 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-12 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-12 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-12 div.sk-label-container {text-align: center;}#sk-container-id-12 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-12 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-12" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>DecisionTreeRegressor(max_depth=2)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-12" type="checkbox" checked=""><label for="sk-estimator-id-12" class="sk-toggleable__label sk-toggleable__label-arrow">DecisionTreeRegressor</label><div class="sk-toggleable__content"><pre>DecisionTreeRegressor(max_depth=2)</pre></div></div></div></div></div>
+</div>
+</div>
+<div id="ce28d109-8afc-42da-a7e2-a16ed3d563c2" class="cell" data-execution_count="128">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(predictr,feature_names<span class="op">=</span>X.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="128">
+<pre><code>[Text(0.5, 0.8333333333333334, 'sex_female &lt;= 0.5\nsquared_error = 75.768\nsamples = 280\nvalue = 157.987'),
+ Text(0.25, 0.5, 'weight &lt;= 76.658\nsquared_error = 2.194\nsamples = 169\nvalue = 164.916'),
+ Text(0.125, 0.16666666666666666, 'squared_error = 2.118\nsamples = 154\nvalue = 164.79'),
+ Text(0.375, 0.16666666666666666, 'squared_error = 1.125\nsamples = 15\nvalue = 166.212'),
+ Text(0.75, 0.5, 'weight &lt;= 48.935\nsquared_error = 3.374\nsamples = 111\nvalue = 147.436'),
+ Text(0.625, 0.16666666666666666, 'squared_error = 2.076\nsamples = 41\nvalue = 146.323'),
+ Text(0.875, 0.16666666666666666, 'squared_error = 2.984\nsamples = 70\nvalue = 148.088')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="15wk-fin.out-Copy1_files/figure-html/cell-28-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="8afcf421-d988-40f2-a63e-f2ac704318d5" class="cell" data-execution_count="130">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>predictr.score(X,y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="130">
+<pre><code>0.9699722000340028</code></pre>
+</div>
+</div>
+<ul>
+<li>결측치가 많아서 &lt; 43 인 것의 height값이 더 큰 값으로 나오네</li>
+</ul>
+</section>
+<section id="weight1번-feature-그다음은..-depth2" class="level4">
+<h4 class="anchored" data-anchor-id="weight1번-feature-그다음은..-depth2">weight(1번 feature), 그다음은.., depth=2</h4>
+<div id="00c4ac06-c476-43d3-b034-dffb94cd3da8" class="cell" data-execution_count="131">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_tr[[<span class="st">'weight'</span>]]</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_tr[<span class="st">'height'</span>]</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.tree.DecisionTreeRegressor(max_depth<span class="op">=</span><span class="dv">1</span>) </span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y) </span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="co"># predictr.predict(X) </span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(predictr,feature_names<span class="op">=</span>X.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="131">
+<pre><code>[Text(0.5, 0.75, 'weight &lt;= -27.858\nsquared_error = 75.768\nsamples = 280\nvalue = 157.987'),
+ Text(0.25, 0.25, 'squared_error = 2.195\nsamples = 129\nvalue = 164.856'),
+ Text(0.75, 0.25, 'squared_error = 63.87\nsamples = 151\nvalue = 152.118')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="15wk-fin.out-Copy1_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="465e85db-ec37-466a-b15d-a2b23fa3f49e" class="cell" data-execution_count="132">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>predictr.score(X,y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="132">
+<pre><code>0.5320524394291483</code></pre>
+</div>
+</div>
+<div id="34036a80-df11-4fab-8109-7b9059467f41" class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>condition <span class="op">=</span> df_tr[<span class="st">'weight'</span>] <span class="op">&gt;</span> <span class="op">-</span><span class="fl">27.858</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="f1324f0f-c176-486a-b7ba-2e5f9df2ca20" class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>condition2 <span class="op">=</span> df_tr[<span class="st">'weight'</span>] <span class="op">&lt;=</span> <span class="op">-</span><span class="fl">27.858</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d4ecdc57-fcd2-41ed-97cf-eb95bc48e8b9" class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>filtered_df <span class="op">=</span> df_tr[condition]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e1790d16-df3a-476d-a22d-c69c84140011" class="cell" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>filtered_df2 <span class="op">=</span> df_tr[condition2]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="28823685-01d8-484d-bfab-e0a31a6fc84f" class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>filtered_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="63">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">weight</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">height</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>75.219015</td>
+<td>male</td>
+<td>165.528672</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>81.476750</td>
+<td>male</td>
+<td>165.501403</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>51.352066</td>
+<td>female</td>
+<td>150.125995</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6</td>
+<td>76.715595</td>
+<td>male</td>
+<td>167.036723</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7</td>
+<td>49.019086</td>
+<td>female</td>
+<td>149.829118</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">267</td>
+<td>47.791830</td>
+<td>female</td>
+<td>143.832614</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">271</td>
+<td>46.991268</td>
+<td>female</td>
+<td>144.749219</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">274</td>
+<td>47.287594</td>
+<td>female</td>
+<td>146.931919</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">275</td>
+<td>49.308558</td>
+<td>female</td>
+<td>148.587771</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">279</td>
+<td>53.714772</td>
+<td>female</td>
+<td>146.775975</td>
+</tr>
+</tbody>
+</table>
+
+<p>151 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div id="9b03decb-fbc3-4d89-91cd-422e7066f2dd" class="cell" data-execution_count="88">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.get_dummies(filtered_df[[<span class="st">'sex'</span>,<span class="st">'weight'</span>]])</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> filtered_df[<span class="st">'height'</span>]</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.tree.DecisionTreeRegressor(max_depth<span class="op">=</span><span class="dv">2</span>,splitter<span class="op">=</span><span class="st">"best"</span>) </span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y) </span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="co"># predictr.predict(X) </span></span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(predictr,feature_names<span class="op">=</span>X.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="88">
+<pre><code>[Text(0.5, 0.8333333333333334, 'weight &lt;= 63.609\nsquared_error = 63.87\nsamples = 151\nvalue = 152.118'),
+ Text(0.25, 0.5, 'weight &lt;= 48.935\nsquared_error = 3.374\nsamples = 111\nvalue = 147.436'),
+ Text(0.125, 0.16666666666666666, 'squared_error = 2.076\nsamples = 41\nvalue = 146.323'),
+ Text(0.375, 0.16666666666666666, 'squared_error = 2.984\nsamples = 70\nvalue = 148.088'),
+ Text(0.75, 0.5, 'weight &lt;= 76.658\nsquared_error = 2.139\nsamples = 40\nvalue = 165.11'),
+ Text(0.625, 0.16666666666666666, 'squared_error = 1.58\nsamples = 25\nvalue = 164.448'),
+ Text(0.875, 0.16666666666666666, 'squared_error = 1.125\nsamples = 15\nvalue = 166.212')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="15wk-fin.out-Copy1_files/figure-html/cell-37-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div id="34daa721-35f2-43cd-af34-5eb5c7663869" class="cell" data-execution_count="71">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.get_dummies(filtered_df2[[<span class="st">'sex'</span>,<span class="st">'weight'</span>]])</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> filtered_df2[<span class="st">'height'</span>]</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.tree.DecisionTreeRegressor(max_depth<span class="op">=</span><span class="dv">1</span>) </span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y) </span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="co"># predictr.predict(X) </span></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(predictr,feature_names<span class="op">=</span>X.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="71">
+<pre><code>[Text(0.5, 0.5, 'squared_error = 2.195\nsamples = 129\nvalue = 164.856')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="15wk-fin.out-Copy1_files/figure-html/cell-38-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="weihgt-depth2" class="level4">
+<h4 class="anchored" data-anchor-id="weihgt-depth2">weihgt, depth=2</h4>
+<div id="d4c044ba-09fc-472a-904c-58bd62d69758" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co">## step1</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_tr[[<span class="st">'weight'</span>]]</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_tr[<span class="st">'height'</span>]</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co">## step2</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>predictr <span class="op">=</span> sklearn.tree.DecisionTreeRegressor(max_depth<span class="op">=</span><span class="dv">2</span>) </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="co">## step3 </span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>predictr.fit(X,y) </span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="co">## step4 -- pass </span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="co"># predictr.predict(X) </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<style>#sk-container-id-2 {color: black;background-color: white;}#sk-container-id-2 pre{padding: 0;}#sk-container-id-2 div.sk-toggleable {background-color: white;}#sk-container-id-2 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-2 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-2 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-2 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-2 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-2 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-2 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-2 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-2 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-2 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-2 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-2 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-2 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-2 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-2 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-2 div.sk-item {position: relative;z-index: 1;}#sk-container-id-2 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-2 div.sk-item::before, #sk-container-id-2 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-2 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-2 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-2 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-2 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-2 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-2 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-2 div.sk-label-container {text-align: center;}#sk-container-id-2 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-2 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-2" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>DecisionTreeRegressor(max_depth=2)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" checked=""><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">DecisionTreeRegressor</label><div class="sk-toggleable__content"><pre>DecisionTreeRegressor(max_depth=2)</pre></div></div></div></div></div>
+</div>
+</div>
+<div id="ed35726c-68d5-447d-a1c4-f757f168a7fe" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>sklearn.tree.plot_tree(predictr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>[Text(0.4, 0.8333333333333334, 'x[0] &lt;= -27.858\nsquared_error = 75.768\nsamples = 280\nvalue = 157.987'),
+ Text(0.2, 0.5, 'squared_error = 2.195\nsamples = 129\nvalue = 164.856'),
+ Text(0.6, 0.5, 'x[0] &lt;= 63.609\nsquared_error = 63.87\nsamples = 151\nvalue = 152.118'),
+ Text(0.4, 0.16666666666666666, 'squared_error = 3.374\nsamples = 111\nvalue = 147.436'),
+ Text(0.8, 0.16666666666666666, 'squared_error = 2.139\nsamples = 40\nvalue = 165.11')]</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="15wk-fin.out-Copy1_files/figure-html/cell-40-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p><code>(4)</code> <code>(3)</code>의 결과로 얻어진 아래의 분할을 고려하자.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'weight'</span>] <span class="op">&gt;=</span> c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이 분할에서 depth=2 로 나무를 성장하고자 한다. 성장이가능한가? 성장이 가능하다면 이때 나무를 성장시키기 위한 변수로 weigth와 sex중 무엇이 적절한가? 왜 그렇다고 생각하는가?</p>
+<p>?sex.</p>
+<p>데이터의 46%가 결측값이 있고 해당 값의 성별은 모두 남성이다.</p>
+<p>먼저 성별을 통해 나무를 성장시키는 것이 중요하다.</p>
+<p><code>(5)</code> <code>(3)</code>의 결과로 얻어진 아래의 분할을 고려하자.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'weight'</span>] <span class="op">&lt;</span> c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이 분할에서 depth=2 로 나무를 성장하고자 한다. 성장이가능한가? 성장이 가능하다면 이때 나무를 성장시키기 위한 변수로 weigth와 sex중 무엇이 적절한가? 왜 그렇다고 생각하는가?</p>
+<p><code>(6)</code> <code>(3)</code>-<code>(5)</code>의 결과를 이용하여 <code>depth=2</code>인 의사결정나무에 의한 <code>r</code>의 적합값을 구하여라. 이를 이용하여 <code>yhat</code>을 update하라. 이때 학습률은 0.1로 설정하고 업데이트된 결과를 <code>yhat2</code>로 저장하라. 그리고<code>sklearn.metrics.r2_score()</code>을 이용하여 <code>y</code>와 <code>yhat2</code>의 <code>r2_score</code>를 계산하라.</p>
+<p>힌트: 아래의 알고리즘이 동치임을 이용하라.</p>
+<ul>
+<li><code>yhat2</code> <span class="math inline">\(\leftarrow\)</span> <code>yhat</code> + 학습률 <span class="math inline">\(\times\)</span> <code>rhat</code></li>
+<li><code>r2</code> <span class="math inline">\(\leftarrow\)</span> <code>r</code> - 학습률 <span class="math inline">\(\times\)</span> <code>rhat</code>, where <code>r2</code> = <code>y</code> - <code>yhat2</code></li>
+</ul>
+<div id="dd0385d7-085e-4e20-ba4d-9069f2bb08e9" class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>yhat2 <span class="op">=</span> yhat <span class="op">+</span> <span class="fl">0.1</span> <span class="op">*</span> rhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="78af07a1-1d6b-46dc-a78c-9fb6a9770bba" class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> r <span class="op">-</span> <span class="fl">0.1</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> y <span class="op">-</span> yhat2 ?? 뭔솔..</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>(7)</code> <code>(6)</code>에서 학습률이 0.5일 경우 <code>y</code>와 <code>yhat2</code>의 <code>r2_score</code>를 계산하라.</p>
+</section>
+</section>
+<section id="다음을-읽고-참거짓을-판단하라.-30점" class="level1">
+<h1>2. 다음을 읽고 참거짓을 판단하라. (30점)</h1>
+<p><code>(1)</code> 의사결정나무에서 <code>max_depth</code>의 설정값이 커질수록 오버피팅의 위험이 있다.</p>
+<p>T</p>
+<p><code>(2)</code> 배깅의 설명변수중 일부를 drop 하며 나무를 성장시킨다.</p>
+<p><code>(3)</code> 랜덤포레스트는 나무가지를 랜덤으로 성장시키기도 하고 파괴시키기도 한다.</p>
+<p><code>(4)</code> 부스팅은 여러가지 의사결정나무의 적합값을 평균내는 방식으로 최종예측을 한다.</p>
+<p>F(배깅)</p>
+<p><code>(5)</code> <code>Accuracy</code>는 분류문제에서 언제나 가장 합리적인 평가지표이다.</p>
+<p>F</p>
+<p><code>(6)</code> 모듈49의 아래그림은 “sex == ‘male’” 일 경우 “sex=‘female’” 일때보다 항상(=모든 관측치에 대하여) 키의 예측값을 +2.1 만큼 보정해야 한다는 것을 의미한다.</p>
+<p><img src="https://guebin.github.io/MP2023/posts/13wk-49_files/figure-html/cell-14-output-2.png" class="img-fluid"></p>
+<p>F</p>
+<p><code>(7)</code> 모듈54에서 제시된 아래의 그림은 사실 전혀 고려할 필요가 없다.</p>
+<p><img src="https://guebin.github.io/MP2023/posts/13wk-54_files/figure-html/cell-6-output-6.png" class="img-fluid"></p>
+<p>왜냐하면 Exercise는 범주형, Weight_Loss는 연속형이므로 correlation값은 의미가 없기 때문이다.</p>
+<p><code>(8)</code> 시계열분석에서 <code>static_feature</code>란 이미 알고있는 미래의 시계열자료를 의미한다.</p>
+<p>F</p>
+<p><code>(9)</code> 모듈59에서 소개된 자전거대여자료와 같이 시간특징이 포함된 자료는 언제나 (과거를 기반으로 미래를 예측하는) 시계열분석을 하는 것이 올바르다.</p>
+<p>F</p>
+<p><code>(10)</code> 모듈60에서 소개된 하이퍼파라메터 설정법을 이용하면 때때로 모형의 적합도를 높일 수 있다.</p>
+<p>T</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        for (let i = 0; i < 2; i++) {
+          container.appendChild(note.children[i].cloneNode(true));
+        }
+        return container.innerHTML
+      } else {
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
